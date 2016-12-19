@@ -98,7 +98,9 @@ def get_ui_class(ui_file):
 
 
 def get_project_path():
-    """Get Project Path
+    """
+    Get absolute project path
+    :return absolute project path
     """
     project_path = os.path.abspath(
         os.path.join(
