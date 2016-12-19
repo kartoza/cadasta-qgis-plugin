@@ -4,15 +4,16 @@ __date__ = '14/12/16'
 
 import unittest
 
+import os
 import qgis
 import logging
 from cadasta.api.login import Login
-from cadasta.test.utilities import get_qgis_app
 from qgis.PyQt.QtCore import QCoreApplication
 
-QGIS_APP, CANVAS, IFACE, PARENT = get_qgis_app()
+if not os.environ.get('ON_TRAVIS', False):
+    from cadasta.test.utilities import get_qgis_app
 
-LOGGER = logging.getLogger('CadastaQGISPlugin')
+    QGIS_APP = get_qgis_app()
 
 
 class LoginTest(unittest.TestCase):
