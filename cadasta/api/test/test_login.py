@@ -10,7 +10,6 @@ from cadasta.api.login import Login
 from cadasta.test.utilities import get_qgis_app
 from qgis.PyQt.QtCore import QCoreApplication
 
-
 QGIS_APP, CANVAS, IFACE, PARENT = get_qgis_app()
 
 LOGGER = logging.getLogger('CadastaQGISPlugin')
@@ -21,8 +20,9 @@ class LoginTest(unittest.TestCase):
 
     def setUp(self):
         """Runs before each test."""
-        self.username = 'irwan.kartoza'
-        self.password = 'Irwankartoza1!'
+        self.url = 'https://demo.cadasta.org/'
+        self.username = 'kartoza.demo'
+        self.password = 'demo.kartoza1!'
 
     def tearDown(self):
         """Runs after each test."""
@@ -30,7 +30,7 @@ class LoginTest(unittest.TestCase):
 
     def test_login(self):
         """Test we can click OK."""
-        login = Login(self.username, self.password)
+        login = Login(self.url, self.username, self.password)
         # Wait until it finished
         while not login.reply.isFinished():
             QCoreApplication.processEvents()
