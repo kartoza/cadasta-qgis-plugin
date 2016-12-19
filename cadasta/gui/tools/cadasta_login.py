@@ -20,10 +20,11 @@
  *                                                                         *
  ***************************************************************************/
 """
+import os
 import logging
 from qgis.PyQt import QtGui
 from qgis.gui import QgsMessageBar
-from cadasta.utilities.resources import get_ui_class
+from cadasta.utilities.resources import get_ui_class, get_project_path
 
 from cadasta.api.login import Login
 
@@ -49,6 +50,7 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         self.disable_button(self.save_button)
         self.enable_button(self.test_connection_button)
         self.test_connection_button.clicked.connect(self.login)
+        self.save_button.clicked.connect(self.save_authtoken)
 
     def enable_button(self, custom_button):
         """Enable button"""
@@ -65,6 +67,7 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         username = self.username_input.displayText()
         password = self.password_input.text()
         url = self.url_input.displayText()
+        self.auth_token = None
 
         self.disable_button(self.save_button)
         self.ok_label.setVisible(False)
@@ -82,8 +85,7 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         self.ok_label.setVisible(True)
         """On finished function when tools request is finished"""
         if 'auth_token' in result:
-            auth_token = result['auth_token']
-            output_result = "auth_token is %s" % auth_token
+            self.auth_token = result['auth_token']
             self.enable_button(self.save_button)
             self.ok_label.setText("Success")
             self.ok_label.setStyleSheet("color:green")
@@ -95,3 +97,15 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
 
         self.test_connection_button.setText(self.text_test_connection_button)
         self.enable_button(self.test_connection_button)
+
+    def save_authtoken(self):
+        if self.auth_token:
+            path = get_project_path()
+            filename = os.path.join(
+                path,
+                'secret/authtoken.txt'''
+            )
+            file_ = open(filename, 'w')
+            file_.write(self.auth_token)
+            file_.close()
+            self.close()
