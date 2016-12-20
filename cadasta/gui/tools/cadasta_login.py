@@ -47,7 +47,7 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         """
         Initiate custom styles for dialog
         """
-        self.setStyleSheet("background-color:white")
+        self.setStyleSheet('background-color:white')
         self.disable_button(self.save_button)
         self.enable_button(self.test_connection_button)
         self.test_connection_button.clicked.connect(self.login)
@@ -61,7 +61,7 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         """
         custom_button.setEnabled(True)
         custom_button.setStyleSheet(
-                "background-color:#525252; cursor:pointer;" +
+                'background-color:#525252; cursor:pointer;' +
                 CadastaStyle.button_style()
         )
 
@@ -72,7 +72,7 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         :type custom_button: QWidget
         """
         custom_button.setStyleSheet(
-                "background-color:#A8A8A8;" + CadastaStyle.button_style()
+                'background-color:#A8A8A8;' + CadastaStyle.button_style()
         )
         custom_button.setEnabled(False)
 
@@ -89,11 +89,12 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         if not url or not username or not password:
             self.msg_bar = QgsMessageBar()
             self.msg_bar.pushWarning(
-                    "Error", self.tr("URL/Username/password is empty.")
+                    self.tr('Error'),
+                    self.tr('URL/Username/password is empty.')
             )
         else:
             self.disable_button(self.test_connection_button)
-            self.test_connection_button.setText(self.tr("Logging in..."))
+            self.test_connection_button.setText(self.tr('Logging in...'))
             # call tools API
             self.login_api = Login(url, username, password, self.on_finished)
 
@@ -103,12 +104,12 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         if 'auth_token' in result:
             self.auth_token = result['auth_token']
             self.enable_button(self.save_button)
-            self.ok_label.setText(self.tr("Success"))
-            self.ok_label.setStyleSheet("color:green")
+            self.ok_label.setText(self.tr('Success'))
+            self.ok_label.setStyleSheet('color:green')
         else:
             self.disable_button(self.save_button)
-            self.ok_label.setText(self.tr("Failed"))
-            self.ok_label.setStyleSheet("color:red")
+            self.ok_label.setText(self.tr('Failed'))
+            self.ok_label.setStyleSheet('color:red')
 
         self.test_connection_button.setText(self.text_test_connection_button)
         self.enable_button(self.test_connection_button)
@@ -121,7 +122,7 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
             path = get_project_path()
             filename = os.path.join(
                 path,
-                'secret/authtoken.txt'''
+                'secret/authtoken.txt'
             )
             file_ = open(filename, 'w')
             file_.write(self.auth_token)
