@@ -55,7 +55,9 @@ def get_setting(key):
 
 def save_url_instance(url):
     """
-    Get url that saved.
+    Save url instance that received.
+    :param url: url instance that will saved
+    :type url: QString
 
     """
     set_setting("url", url)
@@ -72,7 +74,7 @@ def get_url_instance():
 
 def delete_url_instance():
     """
-    Delete url that saved.
+    Delete url instance that saved.
 
     """
     delete_setting("url")
@@ -81,6 +83,8 @@ def delete_url_instance():
 def save_authtoken(authtoken):
     """
     Save authtoken.
+    :param authtoken: authtoken that will saved
+    :type authtoken: QString
 
     """
     set_setting("user/authtoken", authtoken)

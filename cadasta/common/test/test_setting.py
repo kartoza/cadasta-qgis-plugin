@@ -11,8 +11,15 @@ import unittest
 
 import os
 from cadasta.common.setting import (
-    save_authtoken, get_authtoken, delete_authtoken, save_url_instance, get_url_instance, delete_url_instance,
-    set_setting, get_setting, delete_setting
+    delete_authtoken,
+    delete_setting,
+    delete_url_instance,
+    get_authtoken,
+    get_setting,
+    get_url_instance,
+    save_authtoken,
+    set_setting,
+    save_url_instance
 )
 
 if not os.environ.get('ON_TRAVIS', False):
