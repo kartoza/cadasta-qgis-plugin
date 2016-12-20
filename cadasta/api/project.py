@@ -24,8 +24,7 @@ class Project(NetworkMixin):
     api_url = 'api/v1/projects/'
 
     def __init__(self, on_finished=None):
-        """
-        Constructor.
+        """ Constructor.
 
         :param on_finished: (optional) is a function that catch tools result request
         :type on_finished: Function
