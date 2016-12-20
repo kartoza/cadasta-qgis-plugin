@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
-import json
-from cadasta.mixin.network_mixin import NetworkMixin
+
 from qgis.PyQt.QtCore import QByteArray
+from cadasta.mixin.network_mixin import NetworkMixin
+
+__author__ = 'Irwan Fathurrahman <irwan@kartoza.com>'
+__revision__ = '$Format:%H$'
+__date__ = '16/12/16'
+__copyright__ = 'Copyright 2016, Cadasta'
 
 
 class Login(NetworkMixin):

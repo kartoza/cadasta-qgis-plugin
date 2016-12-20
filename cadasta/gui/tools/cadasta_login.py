@@ -20,14 +20,15 @@
  *                                                                         *
  ***************************************************************************/
 """
-import os
+
 import logging
 from qgis.PyQt import QtGui
 from qgis.gui import QgsMessageBar
-from cadasta.utilities.resources import get_ui_class, get_project_path
+from cadasta.utilities.resources import get_ui_class
 
 from cadasta.api.login import Login
 from cadasta.gui.tools.cadasta_style import CadastaStyle
+from cadasta.common.setting import save_authtoken, save_url_instance
 
 LOGGER = logging.getLogger('CadastaQGISPlugin')
 FORM_CLASS = get_ui_class('cadasta_login_base.ui')
@@ -75,20 +76,20 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         """Login function when tools button clicked"""
         username = self.username_input.displayText()
         password = self.password_input.text()
-        url = self.url_input.displayText()
+        self.url = self.url_input.displayText()
         self.auth_token = None
 
         self.disable_button(self.save_button)
         self.ok_label.setVisible(False)
 
-        if not url or not username or not password:
+        if not self.url or not username or not password:
             self.msg_bar = QgsMessageBar()
             self.msg_bar.pushWarning("Error", self.tr("URL/Username/password is empty."))
         else:
             self.disable_button(self.test_connection_button)
             self.test_connection_button.setText(self.tr("Logging in..."))
             # call tools API
-            self.login_api = Login(url, username, password, self.on_finished)
+            self.login_api = Login(self.url, username, password, self.on_finished)
 
     def on_finished(self, result):
         """On finished function when tools request is finished"""
@@ -108,15 +109,9 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
 
     def save_authtoken(self):
         """
-        Save received authtoken to external file
+        Save received authtoken to setting
         """
         if self.auth_token:
-            path = get_project_path()
-            filename = os.path.join(
-                path,
-                'secret/authtoken.txt'''
-            )
-            file_ = open(filename, 'w')
-            file_.write(self.auth_token)
-            file_.close()
+            save_authtoken(self.auth_token)
+            save_url_instance(self.url)
             self.close()

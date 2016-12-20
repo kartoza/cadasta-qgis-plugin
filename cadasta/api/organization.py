@@ -11,6 +11,7 @@ Cadasta project - **Organization api.**
 
 from qgis.PyQt.QtCore import QCoreApplication
 from cadasta.mixin.network_mixin import NetworkMixin
+from cadasta.common.setting import get_url_instance
 
 __author__ = 'dimas@kartoza.com'
 __revision__ = '$Format:%H$'
@@ -21,7 +22,8 @@ __copyright__ = 'Copyright 2016, Cadasta'
 class Organization(object):
     """Class to fetch available organization data."""
 
-    api_url = 'https://demo.cadasta.org/api/v1/organizations/'
+    default_domain = 'https://demo.cadasta.org/'
+    api_url = 'api/v1/organizations/'
 
     def _call_api(self, network):
         """Private method to execute api.
@@ -40,6 +42,16 @@ class Organization(object):
             return True, network.get_json_results()
         else:
             return False, network.error
+
+    def get_url(self):
+        """Get URL for organization api
+        :returns: Url based on setting
+        :rtype: basestring
+        """
+        if get_url_instance():
+            return get_url_instance() + self.api_url
+        else:
+            return self.default_domain + self.api_url
 
     def all_organizations(self):
         """Get all organizations.
