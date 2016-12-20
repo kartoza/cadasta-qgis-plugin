@@ -1,4 +1,5 @@
 # coding=utf-8
+"""Tests Pep8."""
 
 import unittest
 import os
@@ -12,6 +13,7 @@ __revision__ = '$Format:%H$'
 
 
 class TestPep8(unittest.TestCase):
+    """Test that the plugin is PEP8 compliant."""
 
     def test_pep8(self):
         """Test if the code is PEP8 compliant."""
