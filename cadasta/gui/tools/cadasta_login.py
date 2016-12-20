@@ -60,7 +60,10 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         :type custom_button: QWidget
         """
         custom_button.setEnabled(True)
-        custom_button.setStyleSheet("background-color:#525252; cursor:pointer;" + CadastaStyle.button_style())
+        custom_button.setStyleSheet(
+                "background-color:#525252; cursor:pointer;" +
+                CadastaStyle.button_style()
+        )
 
     def disable_button(self, custom_button):
         """
@@ -68,7 +71,9 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         :param custom_button: button that is enabled
         :type custom_button: QWidget
         """
-        custom_button.setStyleSheet("background-color:#A8A8A8;" + CadastaStyle.button_style())
+        custom_button.setStyleSheet(
+                "background-color:#A8A8A8;" + CadastaStyle.button_style()
+        )
         custom_button.setEnabled(False)
 
     def login(self):
@@ -83,7 +88,9 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
 
         if not url or not username or not password:
             self.msg_bar = QgsMessageBar()
-            self.msg_bar.pushWarning("Error", self.tr("URL/Username/password is empty."))
+            self.msg_bar.pushWarning(
+                    "Error", self.tr("URL/Username/password is empty.")
+            )
         else:
             self.disable_button(self.test_connection_button)
             self.test_connection_button.setText(self.tr("Logging in..."))
