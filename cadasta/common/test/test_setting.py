@@ -19,7 +19,8 @@ from cadasta.common.setting import (
     get_url_instance,
     save_authtoken,
     set_setting,
-    save_url_instance
+    save_url_instance,
+    default_domain
 )
 
 if not os.environ.get('ON_TRAVIS', False):
@@ -81,7 +82,7 @@ class SettingTest(unittest.TestCase):
         self.assertEqual(self.url, get_url_instance())
 
         delete_url_instance()
-        self.assertIsNone(get_url_instance())
+        self.assertEqual(default_domain, get_url_instance())
 
 
 if __name__ == "__main__":
