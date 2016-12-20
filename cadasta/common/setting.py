@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+"""
+Cadasta project - **Setting utilities**
+
+.. note:: This program is free software; you can redistribute it and/or modify
+     it under the terms of the GNU General Public License as published by
+     the Free Software Foundation; either version 2 of the License, or
+     (at your option) any later version.
+
+"""
 from qgis.PyQt.QtCore import QSettings
 
 __author__ = 'Irwan Fathurrahman <irwan@kartoza.com>'
@@ -9,7 +18,7 @@ __copyright__ = 'Copyright 2016, Cadasta'
 
 def set_setting(key, value):
     """
-    Set setting
+    Set setting.
     :param key: unique key for setting
     :type key: QString
     :param value: value to be saved
@@ -22,7 +31,7 @@ def set_setting(key, value):
 
 def delete_setting(key):
     """
-    delete setting
+    delete setting.
     :param key: unique key for setting
     :type key: QString
 
@@ -33,7 +42,7 @@ def delete_setting(key):
 
 def get_setting(key):
     """
-    get setting
+    get setting.
     :param key: unique key for setting
     :type key: QString
 
@@ -46,7 +55,7 @@ def get_setting(key):
 
 def save_url_instance(url):
     """
-    Get url that saved
+    Get url that saved.
 
     """
     set_setting("url", url)
@@ -54,16 +63,24 @@ def save_url_instance(url):
 
 def get_url_instance():
     """
-    Get authtoken that saved
-    :return authtoken that saved
+    Get url instance that saved.
+    :return url instance that saved
     :rtype QVariant
     """
     return get_setting("url")
 
 
+def delete_url_instance():
+    """
+    Delete url that saved.
+
+    """
+    delete_setting("url")
+
+
 def save_authtoken(authtoken):
     """
-    Save authtoken
+    Save authtoken.
 
     """
     set_setting("user/authtoken", authtoken)
@@ -71,8 +88,16 @@ def save_authtoken(authtoken):
 
 def get_authtoken():
     """
-    Get authtoken that saved
+    Get authtoken that saved.
     :return authtoken that saved
     :rtype QVariant
     """
     return get_setting("user/authtoken")
+
+
+def delete_authtoken():
+    """
+    Delete authtoken that saved.
+
+    """
+    delete_setting("user/authtoken")

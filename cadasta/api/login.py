@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
+"""
+Cadasta project - **Login api.**
 
+.. note:: This program is free software; you can redistribute it and/or modify
+     it under the terms of the GNU General Public License as published by
+     the Free Software Foundation; either version 2 of the License, or
+     (at your option) any later version.
+
+"""
 from qgis.PyQt.QtCore import QByteArray
 from cadasta.mixin.network_mixin import NetworkMixin
 
@@ -12,7 +20,7 @@ __copyright__ = 'Copyright 2016, Cadasta'
 class Login(NetworkMixin):
     def __init__(self, domain, username, password, on_finished=None):
         """
-        Constructor
+        Constructor.
         :param username:
         :param password:
         :param on_finished: is a function that catch tools result request
@@ -28,7 +36,7 @@ class Login(NetworkMixin):
         self.on_finished = on_finished
 
     def connection_finished(self):
-        """On finished function when tools request is finished"""
+        """On finished function when tools request is finished."""
         # extract result
         if self.error:
             self.on_finished(self.error)

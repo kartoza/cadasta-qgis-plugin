@@ -1,12 +1,14 @@
 # coding=utf-8
+
+"""Tests for login api.
+"""
+
 __author__ = 'Irwan Fathurrahman <irwan@kartoza.com>'
 __date__ = '14/12/16'
 
 import unittest
 
 import os
-import qgis
-import logging
 from cadasta.api.login import Login
 from qgis.PyQt.QtCore import QCoreApplication
 

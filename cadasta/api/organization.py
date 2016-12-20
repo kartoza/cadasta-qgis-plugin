@@ -44,7 +44,8 @@ class Organization(object):
             return False, network.error
 
     def get_url(self):
-        """Get URL for organization api
+        """Get URL for organization api.
+
         :returns: Url based on setting
         :rtype: basestring
         """
