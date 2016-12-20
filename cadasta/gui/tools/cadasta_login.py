@@ -40,7 +40,7 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
 
         super(CadastaLogin, self).__init__(parent)
         self.setupUi(self)
-        self.msg_bar = None
+        self.message_bar = None
         self.text_test_connection_button = self.test_connection_button.text()
         self.ok_label.setVisible(False)
         self.init_style()
@@ -90,8 +90,8 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         self.ok_label.setVisible(False)
 
         if not self.url or not username or not password:
-            self.msg_bar = QgsMessageBar()
-            self.msg_bar.pushWarning(
+            self.message_bar = QgsMessageBar()
+            self.message_bar.pushWarning(
                     self.tr('Error'),
                     self.tr('URL/Username/password is empty.')
             )
