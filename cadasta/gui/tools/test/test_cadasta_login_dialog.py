@@ -54,11 +54,11 @@ class CadastaLoginDialogTest(unittest.TestCase):
         msg_bar = self.dialog.msg_bar
         self.assertIsInstance(msg_bar, QgsMessageBar)
 
-    def test_test_connection_fail(self):
+    def test_connection_fail(self):
         """Test for failed test connection"""
         self.dialog.url_input.setText(self.url)
-        self.dialog.username_input.setText("test")
-        self.dialog.password_input.setText("test")
+        self.dialog.username_input.setText('test')
+        self.dialog.password_input.setText('test')
         button = self.dialog.test_connection_button
         button.click()
 
@@ -67,7 +67,7 @@ class CadastaLoginDialogTest(unittest.TestCase):
 
         self.assertFalse(self.dialog.save_button.isEnabled())
 
-    def test_test_connection_success(self):
+    def test_connection_success(self):
         """Test for success test connection"""
         self.dialog.url_input.setText(self.url)
         self.dialog.username_input.setText(self.username)
