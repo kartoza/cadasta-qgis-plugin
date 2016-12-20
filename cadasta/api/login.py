@@ -19,12 +19,19 @@ __copyright__ = 'Copyright 2016, Cadasta'
 
 class Login(NetworkMixin):
     def __init__(self, domain, username, password, on_finished=None):
-        """
-        Constructor.
-        :param username:
-        :param password:
-        :param on_finished: is a function that catch tools result request
-        :return:
+        """Constructor.
+
+        Constructor of login class needs domain, username and password
+        for check connection.
+
+        :param username: username for login.
+        :type username: QString
+
+        :param password: username for login.
+        :type password: QString
+
+        :param on_finished: (optional) is a function that catch tools result request.
+        :type on_finished: Function
         """
         self.request_url = domain + 'api/v1/account/login/?'
         super(Login, self).__init__()
@@ -36,7 +43,10 @@ class Login(NetworkMixin):
         self.on_finished = on_finished
 
     def connection_finished(self):
-        """On finished function when tools request is finished."""
+        """Function finished handler.
+
+        When tools request is finished, this function will be called.
+        Try get result from self.get_json_results() in json format"""
         # extract result
         if self.error:
             self.on_finished(self.error)

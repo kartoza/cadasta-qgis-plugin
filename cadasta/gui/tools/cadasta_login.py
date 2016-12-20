@@ -36,7 +36,8 @@ FORM_CLASS = get_ui_class('cadasta_login_base.ui')
 
 class CadastaLogin(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
-        """Constructor."""
+        """ Constructor."""
+
         super(CadastaLogin, self).__init__(parent)
         self.setupUi(self)
         self.msg_bar = None
@@ -45,9 +46,8 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         self.init_style()
 
     def init_style(self):
-        """
-        Initiate custom styles for dialog.
-        """
+        """ Initiate custom styles for dialog. """
+
         self.setStyleSheet("background-color:white")
         self.disable_button(self.save_button)
         self.enable_button(self.test_connection_button)
@@ -55,25 +55,28 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         self.save_button.clicked.connect(self.save_authtoken)
 
     def enable_button(self, custom_button):
-        """
-        Enable button.
+        """ Enable button.
+
         :param custom_button: button that is enabled
         :type custom_button: QWidget
         """
+
         custom_button.setEnabled(True)
         custom_button.setStyleSheet("background-color:#525252; cursor:pointer;" + CadastaStyle.button_style())
 
     def disable_button(self, custom_button):
-        """
-        Disable button.
+        """ Disable button.
+
         :param custom_button: button that is enabled
         :type custom_button: QWidget
         """
+
         custom_button.setStyleSheet("background-color:#A8A8A8;" + CadastaStyle.button_style())
         custom_button.setEnabled(False)
 
     def login(self):
-        """Login function when tools button clicked."""
+        """ Login function when tools button clicked."""
+
         username = self.username_input.displayText()
         password = self.password_input.text()
         self.url = self.url_input.displayText()
@@ -92,7 +95,8 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
             self.login_api = Login(self.url, username, password, self.on_finished)
 
     def on_finished(self, result):
-        """On finished function when tools request is finished."""
+        """ On finished function when tools request is finished."""
+
         self.ok_label.setVisible(True)
         if 'auth_token' in result:
             self.auth_token = result['auth_token']
@@ -108,9 +112,8 @@ class CadastaLogin(QtGui.QDialog, FORM_CLASS):
         self.enable_button(self.test_connection_button)
 
     def save_authtoken(self):
-        """
-        Save received authtoken to setting.
-        """
+        """ Save received authtoken to setting."""
+
         if self.auth_token:
             save_authtoken(self.auth_token)
             save_url_instance(self.url)
