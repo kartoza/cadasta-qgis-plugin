@@ -1,4 +1,7 @@
 # coding=utf-8
+"""Tests for setting.
+"""
+
 __author__ = 'Irwan Fathurrahman <irwan@kartoza.com>'
 __revision__ = '$Format:%H$'
 __date__ = '20/12/16'
@@ -19,7 +22,7 @@ if not os.environ.get('ON_TRAVIS', False):
 
 
 class SettingTest(unittest.TestCase):
-    """Test dialog works."""
+    """Test setting utilities."""
 
     def setUp(self):
         """Runs before each test."""
