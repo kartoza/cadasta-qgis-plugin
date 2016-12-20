@@ -15,6 +15,8 @@ __revision__ = '$Format:%H$'
 __date__ = '20/12/16'
 __copyright__ = 'Copyright 2016, Cadasta'
 
+default_domain = 'https://demo.cadasta.org/'
+
 
 def set_setting(key, value):
     """
@@ -69,7 +71,11 @@ def get_url_instance():
     :return url instance that saved
     :rtype QVariant
     """
-    return get_setting("url")
+    settings = QSettings()
+    return settings.value(
+        "url",
+        default_domain
+    )
 
 
 def delete_url_instance():

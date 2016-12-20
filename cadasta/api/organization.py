@@ -22,7 +22,6 @@ __copyright__ = 'Copyright 2016, Cadasta'
 class Organization(object):
     """Class to fetch available organization data."""
 
-    default_domain = 'https://demo.cadasta.org/'
     api_url = 'api/v1/organizations/'
 
     def _call_api(self, network):
@@ -43,17 +42,6 @@ class Organization(object):
         else:
             return False, network.error
 
-    def get_url(self):
-        """Get URL for organization api.
-
-        :returns: Url based on setting
-        :rtype: basestring
-        """
-        if get_url_instance():
-            return get_url_instance() + self.api_url
-        else:
-            return self.default_domain + self.api_url
-
     def all_organizations(self):
         """Get all organizations.
 
@@ -61,7 +49,7 @@ class Organization(object):
                   (if request failed return failure messages).
         :rtype: (bool, list/str)
         """
-        network = NetworkMixin(self.api_url)
+        network = NetworkMixin(get_url_instance() + self.api_url)
         return self._call_api(network)
 
     def summary_organization(self, slug):
@@ -76,5 +64,5 @@ class Organization(object):
         """
         if not slug:
             return False, None
-        network = NetworkMixin(self.api_url + slug + '/')
+        network = NetworkMixin(get_url_instance() + self.api_url + slug + '/')
         return self._call_api(network)
