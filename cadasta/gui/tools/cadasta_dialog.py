@@ -42,9 +42,9 @@ class CadastaDialog(QtGui.QDialog):
         super(CadastaDialog, self).__init__(parent)
         self.setupUi(self)
         self.message_bar = None
-        self.init_style()
+        self._init_style()
 
-    def init_style(self):
+    def _init_style(self):
         """ Initiate custom styles for dialog. """
 
         self.setStyleSheet('background-color:white')
