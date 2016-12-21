@@ -9,8 +9,8 @@ __date__ = '14/12/16'
 import unittest
 
 import os
-from cadasta.api.project import Project
 from qgis.PyQt.QtCore import QCoreApplication
+from cadasta.api.project import Project
 
 if not os.environ.get('ON_TRAVIS', False):
     from cadasta.test.utilities import get_qgis_app
@@ -29,7 +29,7 @@ class ProjectTest(unittest.TestCase):
         self.dialog = None
 
     def test_project(self):
-        """Test we can click OK."""
+        """Test project api."""
         project = Project()
         # Wait until it finished
         while not project.reply.isFinished():

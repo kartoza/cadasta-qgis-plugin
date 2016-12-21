@@ -9,8 +9,8 @@ __date__ = '14/12/16'
 import unittest
 
 import os
-from cadasta.api.login import Login
 from qgis.PyQt.QtCore import QCoreApplication
+from cadasta.api.login import Login
 
 if not os.environ.get('ON_TRAVIS', False):
     from cadasta.test.utilities import get_qgis_app
