@@ -16,7 +16,9 @@ import os
 import unittest
 from qgis.PyQt.QtCore import QCoreApplication
 
-from cadasta.gui.tools.cadasta_project_download_step_2 import CadastaProjectDownloadStep2
+from cadasta.gui.tools.cadasta_project_download_step_2 import (
+    CadastaProjectDownloadStep2
+)
 
 if not os.environ.get('ON_TRAVIS', False):
     from cadasta.test.utilities import get_qgis_app

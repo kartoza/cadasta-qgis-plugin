@@ -78,15 +78,19 @@ class CadastaProjectDownloadStep2(CadastaDialog, FORM_CLASS):
     def increase_progress_bar(self):
         """Increasing progress bar."""
 
-        self.progress_bar.setValue(self.progress_bar.value() + self.grid_value)
-        if self.progress_bar.maximum() - self.progress_bar.value() < self.grid_value:
+        self.progress_bar.setValue(
+            self.progress_bar.value() + self.grid_value)
+        progress_bar_max = self.progress_bar.maximum()
+        progress_bar_value = self.progress_bar.value()
+        if progress_bar_max - progress_bar_value < self.grid_value:
             self.progress_bar.setValue(self.progress_bar.maximum())
 
     def get_projects(self):
         """Get project of organization list through api. """
 
         self.api = OrganizationProject(
-            self.organization_slug, on_finished=self.organization_projects_call_finished)
+            self.organization_slug,
+            on_finished=self.organization_projects_call_finished)
 
     def organization_projects_call_finished(self, result):
         """Function when Organization Project Api finished
@@ -99,7 +103,8 @@ class CadastaProjectDownloadStep2(CadastaDialog, FORM_CLASS):
         if result[0]:
             self.projects = result[1]
             # get grid value
-            self.grid_value = self.progress_bar.maximum() / (len(self.projects) + 1)
+            self.grid_value = self.progress_bar.maximum() / (
+            len(self.projects) + 1)
 
             # render geojson
             for project in self.projects:

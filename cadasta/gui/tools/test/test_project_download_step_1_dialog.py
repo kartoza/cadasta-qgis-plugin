@@ -15,7 +15,9 @@ __copyright__ = 'Copyright 2016, Cadasta'
 import os
 import unittest
 
-from cadasta.gui.tools.cadasta_project_download_step_1 import CadastaProjectDownloadStep1
+from cadasta.gui.tools.cadasta_project_download_step_1 import (
+    CadastaProjectDownloadStep1
+)
 
 if not os.environ.get('ON_TRAVIS', False):
     from cadasta.test.utilities import get_qgis_app
