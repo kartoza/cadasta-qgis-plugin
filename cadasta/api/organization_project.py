@@ -82,13 +82,18 @@ class OrganizationProjectSpatial(NetworkMixin):
     def connection_finished(self):
         """On finished function when tools request is finished.
 
-        It will passing status of request, result, organization slug and project_slug
+        It will passing status of request, result,
+        organization slug and project_slug
         to on_finished method
         """
         # extract result
         if self.error:
-            self.on_finished((False, self.error, self.organization_slug, self.project_slug))
+            self.on_finished(
+                (False, self.error, self.organization_slug, self.project_slug)
+            )
         else:
             result = self.get_json_results()
             if self.on_finished and callable(self.on_finished):
-                self.on_finished((True, result, self.organization_slug, self.project_slug))
+                self.on_finished(
+                    (True, result, self.organization_slug, self.project_slug)
+                )

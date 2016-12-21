@@ -17,7 +17,10 @@ import logging
 
 from qgis.core import QgsVectorLayer, QgsMapLayerRegistry
 from qgis.gui import QgsMessageBar
-from cadasta.api.organization_project import OrganizationProject, OrganizationProjectSpatial
+from cadasta.api.organization_project import (
+    OrganizationProject,
+    OrganizationProjectSpatial
+)
 from cadasta.gui.tools.cadasta_dialog import CadastaDialog
 from cadasta.utilities.resources import get_ui_class
 from cadasta.common.setting import get_path_data

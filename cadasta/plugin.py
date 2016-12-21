@@ -26,7 +26,9 @@ from qgis.PyQt.QtGui import QAction, QIcon, QMenu, QWidget
 # Initialize Qt resources from file resources.py
 # Import the code for the dialog
 from cadasta.gui.tools.cadasta_login import CadastaLogin
-from cadasta.gui.tools.cadasta_project_download_step_1 import CadastaProjectDownloadStep1
+from cadasta.gui.tools.cadasta_project_download_step_1 import (
+    CadastaProjectDownloadStep1
+)
 import os.path
 
 LOGGER = logging.getLogger('CadastaQGISPlugin')

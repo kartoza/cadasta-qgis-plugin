@@ -17,7 +17,9 @@ from qgis.gui import QgsMessageBar
 
 from cadasta.api.organization import Organization
 from cadasta.gui.tools.cadasta_dialog import CadastaDialog
-from cadasta.gui.tools.cadasta_project_download_step_2 import CadastaProjectDownloadStep2
+from cadasta.gui.tools.cadasta_project_download_step_2 import (
+    CadastaProjectDownloadStep2
+)
 from cadasta.utilities.resources import get_ui_class
 
 FORM_CLASS = get_ui_class('cadasta_project_download_step_1.ui')
@@ -35,7 +37,8 @@ class CadastaProjectDownloadStep1(CadastaDialog, FORM_CLASS):
         self.message_bar = None
         self.init_style()
         self.organization_api = Organization()
-        self.get_available_projects_button.clicked.connect(self.get_organization)
+        self.get_available_projects_button.clicked.connect(
+            self.get_organization)
         self.step_2_button.clicked.connect(self.goto_step_2)
         self.next_button.clicked.connect(self.goto_step_2)
 
@@ -57,7 +60,8 @@ class CadastaProjectDownloadStep1(CadastaDialog, FORM_CLASS):
                 self.tr('Organization should be selected first')
             )
         else:
-            project_slug = self.project_combo_box.itemData(self.project_combo_box.currentIndex())
+            project_slug = self.project_combo_box.itemData(
+                self.project_combo_box.currentIndex())
             step_2 = CadastaProjectDownloadStep2(project_slug, self)
             self.hide()
             step_2.show()
@@ -75,4 +79,5 @@ class CadastaProjectDownloadStep1(CadastaDialog, FORM_CLASS):
         self.project_combo_box.clear()
         if organizations[0]:
             for organization in organizations[1]:
-                self.project_combo_box.addItem(organization['name'], organization['slug'])
+                self.project_combo_box.addItem(
+                    organization['name'], organization['slug'])
