@@ -42,11 +42,6 @@ class CadastaDialog(QtGui.QDialog):
         super(CadastaDialog, self).__init__(parent)
         self.setupUi(self)
         self.message_bar = None
-        self._init_style()
-
-    def _init_style(self):
-        """Initiate custom styles for dialog. """
-        pass
 
     def enable_button(self, custom_button):
         """Enable button.
