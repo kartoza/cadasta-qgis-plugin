@@ -21,16 +21,17 @@
  ***************************************************************************/
 """
 import logging
+import os.path
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, \
     QCoreApplication
-from qgis.PyQt.QtGui import QAction, QIcon, QMenu, QWidget
+from qgis.PyQt.QtGui import QAction, QIcon, QWidget
 # Initialize Qt resources from file resources.py
 # Import the code for the dialog
+from cadasta.utilities.resources import resources_path
 from cadasta.gui.tools.cadasta_login import CadastaLogin
 from cadasta.gui.tools.cadasta_project_download_step_1 import (
     CadastaProjectDownloadStep1
 )
-import os.path
 
 LOGGER = logging.getLogger('CadastaQGISPlugin')
 
@@ -134,6 +135,8 @@ class CadastaPlugin:
         :rtype: QAction
         """
 
+        icon_path = resources_path('images/%s' % icon_path)
+
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
         action.triggered.connect(callback)
@@ -169,7 +172,7 @@ class CadastaPlugin:
 
     def _create_options_wizard_action(self):
         """Create action for options wizard."""
-        icon_path = ':/plugins/cadasta-qgis-plugin/icon.png'
+        icon_path = 'icon.png'
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Options'),
@@ -187,7 +190,7 @@ class CadastaPlugin:
 
     def _create_project_download_wizard_action(self):
         """Create action for project download wizard."""
-        icon_path = ':/plugins/cadasta-qgis-plugin/icon.png'
+        icon_path = 'icon.png'
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Project Download'),
