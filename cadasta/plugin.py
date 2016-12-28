@@ -22,9 +22,17 @@
 """
 import logging
 import os.path
-from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, \
+from qgis.PyQt.QtCore import (
+    QSettings,
+    QTranslator,
+    qVersion,
     QCoreApplication
-from qgis.PyQt.QtGui import QAction, QIcon, QWidget
+)
+from qgis.PyQt.QtGui import (
+    QAction,
+    QIcon,
+    QWidget
+)
 # Initialize Qt resources from file resources.py
 # Import the code for the dialog
 from cadasta.utilities.resources import resources_path
