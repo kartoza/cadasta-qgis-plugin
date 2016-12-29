@@ -11,7 +11,6 @@ This module provides: Login : Login for cadasta and save authnetication
 
 """
 import logging
-from qgis.PyQt.QtCore import QModelIndex
 from qgis.PyQt.QtGui import (
     QHeaderView,
     QAbstractItemView

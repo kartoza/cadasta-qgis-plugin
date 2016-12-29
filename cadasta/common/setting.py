@@ -152,9 +152,11 @@ def get_path_data(organization_slug=None, project_slug=None):
 
 
 def get_path_database(database=None):
-    """ Path databased based on database.
+    """Path databased based on database.
+
     :param database: database for the data location
     :type database: str
+
     :return: Absoulte database path
     :rtype: str
     """

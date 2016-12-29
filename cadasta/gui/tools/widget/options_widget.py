@@ -40,6 +40,10 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
         """
         super(OptionsWidget, self).__init__(parent)
         self.set_widgets()
+        self.text_test_connection_button = None
+        self.url = None
+        self.auth_token = None
+        self.login_api = None
 
     def set_widgets(self):
         """Set all widgets."""

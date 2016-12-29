@@ -10,13 +10,15 @@ Cadasta **Cadasta Database.**
 
 """
 
-__author__ = 'Irwan Fathurrahman <irwan@kartoza.com>'
-__date__ = '27/12/16'
-
 import logging
 from qgis.PyQt import QtSql
 from qgis.PyQt.QtSql import QSqlTableModel
 from cadasta.common.setting import get_path_database
+
+__author__ = 'Irwan Fathurrahman <irwan@kartoza.com>'
+__revision__ = '$Format:%H$'
+__date__ = '27/12/16'
+__copyright__ = 'Copyright 2016, Cadasta'
 
 LOGGER = logging.getLogger('CadastaQGISPlugin')
 
@@ -25,16 +27,16 @@ database_name = get_path_database('cadasta.db')
 
 
 class CadastaDatabase(object):
-    """Cadasta class to handle databasel."""
+    """Cadasta class to handle database."""
 
     def __init__(self):
         """Constructor for the class."""
 
     @staticmethod
     def open_database():
-        """open Database
+        """Open Database.
 
-        :return: database that opened
+        :return: Database that opened
         :rtype: QtSql.QSqlDatabase
         """
         db = QtSql.QSqlDatabase.addDatabase(database)
@@ -47,12 +49,12 @@ class CadastaDatabase(object):
 
     @staticmethod
     def save_to_database(table, data):
-        """save Into database.
+        """Save Into database.
 
-        :param table: table target be inserted
+        :param table: Table target be inserted
         :type table: str
 
-        :param data: data to be inserted
+        :param data: Data to be inserted
         :type data: dict
 
         :return: id of row that is inserted
@@ -106,12 +108,12 @@ class CadastaDatabase(object):
 
     @staticmethod
     def get_from_database(table, filter_string):
-        """get rows from database.
+        """Get rows from database.
 
-        :param table: table target be inserted
+        :param table: Table target be inserted
         :type table: str
 
-        :param filter_string: filter_string that will be used as filter
+        :param filter_string: Filter_string that will be used as filter
         :type filter_string: str
 
         :return: Query that is received
@@ -130,12 +132,12 @@ class CadastaDatabase(object):
 
     @staticmethod
     def delete_rows_from_database(table, row_ids):
-        """delete rows from database.
+        """Delete rows from database.
 
-        :param table: table target be inserted
+        :param table: Table target be inserted
         :type table: str
 
-        :param row_ids: list id of row that will be deleted
+        :param row_ids: List id of row that will be deleted
         :type row_ids: [int]
         """
         db = CadastaDatabase.open_database()
@@ -151,15 +153,15 @@ class CadastaDatabase(object):
 
     @staticmethod
     def get_table_model(table):
-        """get table model of table.
+        """Get table model of table.
 
-        :param table: table target be inserted
+        :param table: Table target be inserted
         :type table: str
 
         :return: Table Model for contact
         :rtype: QSqlTableModel
         """
-        db = CadastaDatabase.open_database()
+        CadastaDatabase.open_database()
         table_model = QSqlTableModel()
         table_model.setTable(table)
         table_model.setEditStrategy(QSqlTableModel.OnManualSubmit)

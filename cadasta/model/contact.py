@@ -14,7 +14,7 @@ __revision__ = '$Format:%H$'
 __date__ = '28/12/16'
 __copyright__ = 'Copyright 2016, Cadasta'
 
-from qgis.PyQt.QtSql import QSqlQuery, QSqlQueryModel
+from qgis.PyQt.QtSql import QSqlQuery
 from cadasta.database.cadasta_database import CadastaDatabase
 
 
