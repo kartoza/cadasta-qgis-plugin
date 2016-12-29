@@ -25,12 +25,12 @@ from cadasta.common.setting import (
 )
 
 from cadasta.gui.tools.cadasta_dialog import CadastaDialog
-from cadasta.gui.tools.widget.options_widget import LoginWidget
+from cadasta.gui.tools.widget.options_widget import OptionsWidget
 
 if iface:
-    QGIS_APP = iface
+    IFACE = iface
 else:
-    QGIS_APP = get_iface()
+    IFACE = get_iface()
 
 
 class CadastaLoginTest(unittest.TestCase):
@@ -42,9 +42,9 @@ class CadastaLoginTest(unittest.TestCase):
         self.username = 'kartoza.demo'
         self.password = 'demo.kartoza1!'
         dialog = CadastaDialog(
-            iface=QGIS_APP,
+            iface=IFACE,
             subtitle='Cadasta Login',
-            widget=LoginWidget()
+            widget=OptionsWidget()
         )
         self.dialog = dialog.widget
 
