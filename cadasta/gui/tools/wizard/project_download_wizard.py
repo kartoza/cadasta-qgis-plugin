@@ -81,6 +81,7 @@ class ProjectDownloadWizard(QDialog, FORM_CLASS):
         self.set_logo()
 
     def set_logo(self):
+        """Set logo of dialog."""
         filename = resources_path('images/white_icon.png')
         LOGGER.debug(filename)
         pixmap = QPixmap(filename)

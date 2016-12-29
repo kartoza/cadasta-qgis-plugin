@@ -23,9 +23,8 @@
 import logging
 # Initialize Qt resources from file resources.py
 # Import the code for the dialog
-from cadasta.gui.tools.wizard.login_wizard import (
-    LoginWizard
-)
+from cadasta.gui.tools.cadasta_dialog import CadastaDialog
+from cadasta.gui.tools.widget.login_widget import LoginWidget
 from cadasta.gui.tools.wizard.project_creation_wizard import (
     ProjectCreationWizard
 )
@@ -46,7 +45,6 @@ from qgis.PyQt.QtGui import (
 # Initialize Qt resources from file resources.py
 # Import the code for the dialog
 from cadasta.utilities.resources import resources_path
-
 
 LOGGER = logging.getLogger('CadastaQGISPlugin')
 
@@ -210,8 +208,10 @@ class CadastaPlugin:
 
     def show_options_wizard(self):
         """Show the options wizard."""
-        dialog = LoginWizard(
-            iface=self.iface
+        dialog = CadastaDialog(
+            iface=self.iface,
+            subtitle='Cadasta Login',
+            widget=LoginWidget()
         )
         dialog.show()
         dialog.exec_()
