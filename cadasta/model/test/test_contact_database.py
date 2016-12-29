@@ -27,8 +27,7 @@ class ContactDatabaseTest(unittest.TestCase):
     def test_insert_success_database(self):
         """Test Insert success Database."""
         test_contact = Contact(
-            firstname='test1',
-            lastname='test1',
+            name='test1',
             email='test1@gmail.com',
             phone='000000'
         )
@@ -41,8 +40,7 @@ class ContactDatabaseTest(unittest.TestCase):
         """Test Get Rows Contact Database."""
         # create first
         test_contact = Contact(
-            firstname='test2',
-            lastname='test2',
+            name='test2',
             email='test2@gmail.com',
             phone='0000'
         )
@@ -59,8 +57,7 @@ class ContactDatabaseTest(unittest.TestCase):
         """Test Insert success Database."""
         # save first if not saved
         test_contact = Contact(
-            firstname='test1',
-            lastname='test1',
+            name='test1',
             email='test1@gmail.com',
             phone='000000'
         )
@@ -69,8 +66,8 @@ class ContactDatabaseTest(unittest.TestCase):
 
         # update it
         id = test_contact.id
-        updated_firstname = 'test1_updated'
-        test_contact.firstname = updated_firstname
+        updated_name = 'test1_updated'
+        test_contact.name = updated_name
         test_contact.save()
         self.assertIsNotNone(test_contact.id)
 
@@ -78,7 +75,7 @@ class ContactDatabaseTest(unittest.TestCase):
         contacts = Contact.get_rows(id=test_contact.id)
         self.assertEqual(len(contacts), 1)
         self.assertEqual(contacts[0].id, id)
-        self.assertEqual(contacts[0].firstname, updated_firstname)
+        self.assertEqual(contacts[0].name, updated_name)
 
         test_contact.delete()
 
@@ -86,8 +83,7 @@ class ContactDatabaseTest(unittest.TestCase):
         """Test Get Rows Contact Database."""
         # create first
         test_contact = Contact(
-            firstname='test3',
-            lastname='test3',
+            name='test3',
             email='test3@gmail.com',
             phone='00000'
         )

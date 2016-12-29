@@ -15,6 +15,7 @@ __date__ = '27/12/16'
 
 import logging
 from qgis.PyQt import QtSql
+from qgis.PyQt.QtSql import QSqlTableModel
 from cadasta.common.setting import get_path_database
 
 LOGGER = logging.getLogger('CadastaQGISPlugin')
@@ -32,12 +33,17 @@ class CadastaDatabase(object):
     @staticmethod
     def open_database():
         """open Database
+
+        :return: database that opened
+        :rtype: QtSql.QSqlDatabase
         """
         db = QtSql.QSqlDatabase.addDatabase(database)
         if db:
             db.setDatabaseName(database_name)
-            if not db.open():
+            if db.open():
                 LOGGER.debug("not opened")
+                return db
+        return None
 
     @staticmethod
     def save_to_database(table, data):
@@ -52,7 +58,7 @@ class CadastaDatabase(object):
         :return: id of row that is inserted
         :rtype: int
         """
-        CadastaDatabase.open_database()
+        db = CadastaDatabase.open_database()
         if 'id' in data:
             # updating existing data
             row_id = data['id']
@@ -90,8 +96,9 @@ class CadastaDatabase(object):
                                'FIELDS': ','.join(fields),
                                'VALUES': ','.join(values)
                            }
-        query = QtSql.QSqlQuery()
+        query = QtSql.QSqlQuery(db)
         query.exec_(query_string)
+        db.close()
         if query.numRowsAffected() < 1:
             return -1
         else:
@@ -110,14 +117,15 @@ class CadastaDatabase(object):
         :return: Query that is received
         :rtype: QSqlQuery
         """
-        CadastaDatabase.open_database()
+        db = CadastaDatabase.open_database()
         query_string = (
             'SELECT * FROM %(TABLE)s ' % {'TABLE': table}
         )
         if filter_string:
             query_string += 'WHERE %s' % filter_string
-        query = QtSql.QSqlQuery()
+        query = QtSql.QSqlQuery(db)
         query.exec_(query_string)
+        db.close()
         return query
 
     @staticmethod
@@ -130,12 +138,30 @@ class CadastaDatabase(object):
         :param row_ids: list id of row that will be deleted
         :type row_ids: [int]
         """
-        CadastaDatabase.open_database()
+        db = CadastaDatabase.open_database()
         row_ids = ['%s' % row_id for row_id in row_ids]
         query_string = (
             'DELETE FROM %(TABLE)s WHERE ID IN (%(ID)s)' % {
                 'TABLE': table, 'ID': ','.join(row_ids)
             }
         )
-        query = QtSql.QSqlQuery()
+        query = QtSql.QSqlQuery(db)
         query.exec_(query_string)
+        db.close()
+
+    @staticmethod
+    def get_table_model(table):
+        """get table model of table.
+
+        :param table: table target be inserted
+        :type table: str
+
+        :return: Table Model for contact
+        :rtype: QSqlTableModel
+        """
+        db = CadastaDatabase.open_database()
+        table_model = QSqlTableModel()
+        table_model.setTable(table)
+        table_model.setEditStrategy(QSqlTableModel.OnManualSubmit)
+        table_model.select()
+        return table_model

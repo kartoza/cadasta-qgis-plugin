@@ -1,6 +1,6 @@
 # coding=utf-8
 """
-Cadasta Login -**Cadasta Widget**
+Cadasta Options -**Cadasta Widget**
 
 This module provides: Login : Login for cadasta and save authnetication
 
@@ -29,8 +29,8 @@ FORM_CLASS = get_widget_step_ui_class(__file__)
 LOGGER = logging.getLogger('CadastaQGISPlugin')
 
 
-class LoginWidget(WidgetBase, FORM_CLASS):
-    """Login widget"""
+class OptionsWidget(WidgetBase, FORM_CLASS):
+    """Options widget"""
 
     def __init__(self, parent=None):
         """Constructor
@@ -38,7 +38,7 @@ class LoginWidget(WidgetBase, FORM_CLASS):
         :param parent: parent - widget to use as parent.
         :type parent: QWidget
         """
-        super(LoginWidget, self).__init__(parent)
+        super(OptionsWidget, self).__init__(parent)
         self.set_widgets()
 
     def set_widgets(self):

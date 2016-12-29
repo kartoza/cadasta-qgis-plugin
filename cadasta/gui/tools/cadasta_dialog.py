@@ -54,8 +54,8 @@ class CadastaDialog(QDialog, FORM_CLASS):
         :param subtitle: Subtitle of dialog.
         :type subtitle: str
 
-        :param subtitle: Widget that will be rendered to dialog
-        :type subtitle: QWidget
+        :param widget: Widget that will be rendered to dialog
+        :type widget: WidgetBase
         """
         QDialog.__init__(self, parent)
         self.setupUi(self)

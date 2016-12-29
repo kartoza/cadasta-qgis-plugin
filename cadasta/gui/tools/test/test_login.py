@@ -25,7 +25,7 @@ from cadasta.common.setting import (
 )
 
 from cadasta.gui.tools.cadasta_dialog import CadastaDialog
-from cadasta.gui.tools.widget.login_widget import LoginWidget
+from cadasta.gui.tools.widget.options_widget import LoginWidget
 
 if iface:
     QGIS_APP = iface

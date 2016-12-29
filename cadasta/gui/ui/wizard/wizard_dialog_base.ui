@@ -108,6 +108,9 @@
           <property name="alignment">
            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
           </property>
+          <property name="margin">
+           <number>10</number>
+          </property>
           <property name="indent">
            <number>-1</number>
           </property>
@@ -172,8 +175,8 @@
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
           <widget class="QStackedWidget" name="stackedWidget"/>
          </item>
         </layout>
