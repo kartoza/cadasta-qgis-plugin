@@ -224,7 +224,7 @@ class CadastaPlugin:
         """Show the options dialog."""
         dialog = CadastaDialog(
             iface=self.iface,
-            subtitle='Cadasta Options',
+            subtitle=self.tr(u'Cadasta Options'),
             widget=OptionsWidget()
         )
 
