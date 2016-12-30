@@ -127,6 +127,7 @@ class CadastaDatabase(object):
             query_string += 'WHERE %s' % filter_string
         query = QtSql.QSqlQuery(db)
         query.exec_(query_string)
+        query.last()
         db.close()
         return query
 
