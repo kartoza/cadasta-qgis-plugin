@@ -88,13 +88,13 @@ class ContactWidget(WidgetBase, FORM_CLASS):
             if not record.value("email") and not record.value("phone"):
                 error = self.tr(
                     'One or more contact doesn\'t has email and '
-                    'password. Either  email or  tel must be provided.')
+                    'phone. Either email or phone must be provided.')
                 break
                 # validate email
             if record.value("email") and not self.validate_email(
                     record.value("email")):
                 error = self.tr(
-                    'There is wrong email.')
+                    'There is one or more wrong email in contact ist.')
 
         if not error:
             self.model.submitAll()

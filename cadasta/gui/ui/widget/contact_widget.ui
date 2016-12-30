@@ -41,7 +41,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Contact must containing  name,  email ( optional ) and phone ( optional ) , either  email or  phone must be provided.</string>
+          <string>Contact must containing name, email (optional) and phone (optional). Either email or phone must be provided.</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
