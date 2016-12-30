@@ -11,11 +11,11 @@ Cadasta **Cadasta Dialog Base.**
 """
 
 import logging
-
 from qgis.PyQt.QtGui import (
     QDialog,
     QPixmap
 )
+from qgis.PyQt.QtCore import pyqtSignal
 
 from cadasta.utilities.resources import get_ui_class, resources_path
 from cadasta.utilities.i18n import tr
@@ -32,6 +32,9 @@ LOGGER = logging.getLogger('CadastaQGISPlugin')
 
 class CadastaDialog(QDialog, FORM_CLASS):
     """Dialog base class for cadasta."""
+
+    authenticated = pyqtSignal()
+    unauthenticated = pyqtSignal()
 
     def __init__(self, parent=None, iface=None,
                  title='Cadasta', subtitle='', widget=None):
@@ -73,6 +76,6 @@ class CadastaDialog(QDialog, FORM_CLASS):
 
     def set_logo(self):
         """Set logo of dialog."""
-        filename = resources_path("images/white_icon.png")
+        filename = resources_path('images', 'white_icon.png')
         pixmap = QPixmap(filename)
         self.label_main_icon.setPixmap(pixmap)

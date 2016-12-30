@@ -21,6 +21,12 @@
  ***************************************************************************/
 """
 import logging
+from qgis.PyQt.QtCore import QCoreApplication
+from qgis.PyQt.QtGui import (
+    QAction,
+    QIcon,
+    QWidget
+)
 # Initialize Qt resources from file resources.py
 # Import the code for the dialog
 from cadasta.gui.tools.cadasta_dialog import CadastaDialog
@@ -32,17 +38,8 @@ from cadasta.gui.tools.wizard.project_creation_wizard import (
 from cadasta.gui.tools.wizard.project_download_wizard import (
     ProjectDownloadWizard
 )
-from qgis.PyQt.QtCore import (
-    QSettings,
-    QTranslator,
-    qVersion,
-    QCoreApplication
-)
-from qgis.PyQt.QtGui import (
-    QAction,
-    QIcon,
-    QWidget
-)
+from cadasta.common.setting import get_authtoken
+
 # Initialize Qt resources from file resources.py
 # Import the code for the dialog
 from cadasta.utilities.resources import resources_path
@@ -135,8 +132,6 @@ class CadastaPlugin:
         :rtype: QAction
         """
 
-        icon_path = resources_path('images/%s' % icon_path)
-
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
         action.triggered.connect(callback)
@@ -163,6 +158,11 @@ class CadastaPlugin:
                 self.tr(u'&Cadasta'),
                 action)
 
+        if get_authtoken():
+            self._enable_authenticated_menu()
+        else:
+            self._disable_authenticated_menu()
+
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         if self.wizard:
@@ -174,7 +174,7 @@ class CadastaPlugin:
 
     def _create_options_dialog(self):
         """Create action for options dialog."""
-        icon_path = 'icon.png'
+        icon_path = resources_path('images', 'icon.png')
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Options'),
@@ -186,7 +186,7 @@ class CadastaPlugin:
 
     def _create_project_creation_wizard(self):
         """Create action for project creation wizard."""
-        icon_path = 'icon.png'
+        icon_path = resources_path('images', 'icon.png')
         self.project_creation_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Create Project'),
@@ -198,7 +198,7 @@ class CadastaPlugin:
 
     def _create_project_download_wizard(self):
         """Create action for project download wizard."""
-        icon_path = 'icon.png'
+        icon_path = resources_path('images', 'icon.png')
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Download Project'),
@@ -210,7 +210,7 @@ class CadastaPlugin:
 
     def _create_contact_dialog(self):
         """Create action for project download wizard."""
-        icon_path = 'icon.png'
+        icon_path = resources_path('images', 'icon.png')
         self.action_options_wizard = self.add_action(
             icon_path,
             text=self.tr(u'Contact'),
@@ -227,8 +227,20 @@ class CadastaPlugin:
             subtitle='Cadasta Options',
             widget=OptionsWidget()
         )
+
+        dialog.authenticated.connect(self._enable_authenticated_menu)
+        dialog.unauthenticated.connect(self._disable_authenticated_menu)
+
         dialog.show()
         dialog.exec_()
+
+    def _enable_authenticated_menu(self):
+        """Enable menu that requires auth token to proceed."""
+        self.project_creation_wizard.setEnabled(True)
+
+    def _disable_authenticated_menu(self):
+        """Disable menu that requires auth token to proceed."""
+        self.project_creation_wizard.setEnabled(False)
 
     def show_project_download_wizard(self):
         """Show the project download wizard."""

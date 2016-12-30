@@ -13,11 +13,21 @@ This module provides: Login : Login for cadasta and save authnetication
 import logging
 from qgis.gui import QgsMessageBar
 from cadasta.api.login import Login
-from cadasta.common.setting import save_authtoken, save_url_instance
 from cadasta.gui.tools.widget.widget_base import (
     get_widget_step_ui_class,
     WidgetBase
 )
+from cadasta.common.setting import (
+    save_authtoken,
+    save_url_instance,
+    get_url_instance,
+    set_setting,
+    get_setting,
+    delete_authtoken,
+    delete_setting,
+    get_authtoken
+)
+from cadasta.utilities.i18n import tr
 
 __copyright__ = "Copyright 2016, Cadasta"
 __license__ = "GPL version 3"
@@ -39,11 +49,11 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
         :type parent: QWidget
         """
         super(OptionsWidget, self).__init__(parent)
-        self.set_widgets()
         self.text_test_connection_button = None
         self.url = None
         self.auth_token = None
         self.login_api = None
+        self.set_widgets()
 
     def set_widgets(self):
         """Set all widgets."""
@@ -57,10 +67,45 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
         self.save_button.clicked.connect(
             self.save_authtoken
         )
+        self.clear_button.setText(
+            tr('Clear')
+        )
+
+        self.clear_button.setEnabled(False)
+        self.clear_button.clicked.connect(
+            self.clear_information
+        )
+        self.url_input.setText(get_url_instance())
+
+        # If login information exists
+        if get_authtoken():
+            self.clear_button.setEnabled(True)
+            self.username_input.setText(get_setting('username'))
+            self.token_status.setText(
+                tr('Auth token is saved.')
+            )
+        else:
+            self.token_status.setText(
+                tr('Auth token is empty.')
+            )
+
+    def clear_information(self):
+        """Clear login information."""
+        self.username_input.clear()
+        self.password_input.clear()
+        delete_authtoken()
+        delete_setting('username')
+        self.clear_button.setEnabled(False)
+        self.token_status.setText(
+            tr(
+                'Auth token is empty.'
+            )
+        )
+        self.parent.unauthenticated.emit()
 
     def login(self):
         """Login function when tools button clicked."""
-
+        self.clear_button.setEnabled(False)
         username = self.username_input.displayText()
         password = self.password_input.text()
         self.url = self.url_input.displayText()
@@ -94,6 +139,7 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
             self.save_button.setEnabled(True)
             self.ok_label.setText(self.tr('Success'))
             self.ok_label.setStyleSheet('color:green')
+            self.parent.authenticated.emit()
         else:
             self.save_button.setEnabled(False)
             self.ok_label.setText(self.tr('Failed'))
@@ -109,6 +155,8 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
         """
 
         if self.auth_token:
+            set_setting('username', self.username_input.displayText())
+            self.clear_button.setEnabled(True)
             save_authtoken(self.auth_token)
             save_url_instance(self.url)
             self.parent.close()
