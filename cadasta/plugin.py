@@ -46,7 +46,7 @@ from cadasta.utilities.resources import resources_path
 LOGGER = logging.getLogger('CadastaQGISPlugin')
 
 
-class CadastaPlugin:
+class CadastaPlugin(object):
     """QGIS Plugin Implementation."""
 
     def __init__(self, iface):

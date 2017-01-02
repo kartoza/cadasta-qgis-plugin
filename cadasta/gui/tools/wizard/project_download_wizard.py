@@ -23,7 +23,6 @@ from cadasta.utilities.resources import get_ui_class
 from cadasta.utilities.i18n import tr
 from cadasta.gui.tools.wizard.wizard_dialog import WizardDialog
 
-
 __copyright__ = "Copyright 2016, Cadasta"
 __license__ = "GPL version 3"
 __email__ = "info@kartoza.org"
@@ -57,7 +56,7 @@ class ProjectDownloadWizard(WizardDialog):
         super(ProjectDownloadWizard, self).__init__(parent, iface)
 
         self.set_subtitle(
-                tr('Cadasta project download wizard')
+            tr('Cadasta project download wizard')
         )
 
         self.organisations_list = None

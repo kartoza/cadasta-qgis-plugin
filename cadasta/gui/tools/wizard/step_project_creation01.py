@@ -143,7 +143,7 @@ class StepProjectCreation1(WizardStep, FORM_CLASS):
         """Get available organisations and load it to
            organisation combo box.
         """
-        LOGGER.info('Getting organisations')
+        LOGGER.info(self.tr('Getting organisations'))
         self.get_organisation_button.setEnabled(False)
         status, results = self.organisation.all_organizations()
         self.get_organisation_button.setEnabled(True)
@@ -209,12 +209,12 @@ class StepProjectCreation1(WizardStep, FORM_CLASS):
         )
 
         if result == QgsVectorFileWriter.NoError:
-            LOGGER.debug('Wrote layer to geojson: %s' % output_file)
+            LOGGER.debug(self.tr('Wrote layer to geojson: %s') % output_file)
             with open(output_file) as json_data:
                 layer_data = json.load(json_data)
                 data['locations'] = layer_data
             os.remove(output_file)
         else:
-            LOGGER.error('Failed with error: %s' % result)
+            LOGGER.error(self.tr('Failed with error: %s') % result)
 
         return data

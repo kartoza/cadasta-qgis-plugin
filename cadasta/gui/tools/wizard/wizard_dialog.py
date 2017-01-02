@@ -134,8 +134,8 @@ class WizardDialog(QDialog, FORM_CLASS):
         # Enable the Back button unless it's not the first step or
         # last step
         self.back_button.setEnabled(
-                step not in [self.first_step()] or
-                self.parent_step is not None)
+            step not in [self.first_step()] or
+            self.parent_step is not None)
 
         # Set Next button label
         if step == self.last_step():
@@ -184,8 +184,8 @@ class WizardDialog(QDialog, FORM_CLASS):
         if not valid_status:
             self.message_bar = QgsMessageBar()
             self.message_bar.pushWarning(
-                    tr('Error'),
-                    message
+                tr('Error'),
+                message
             )
             LOGGER.info(message)
             return
