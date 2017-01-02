@@ -44,6 +44,7 @@ class StepProjectUpdate02(WizardStep, FORM_CLASS):
         super(StepProjectUpdate02, self).__init__(parent)
         self.parent = parent
         self.project = None
+        self.update_button.clicked.connect(self.update_project)
 
     def set_widgets(self):
         """Set all widgets on the tab."""
@@ -122,8 +123,6 @@ class StepProjectUpdate02(WizardStep, FORM_CLASS):
 
                 selected_item.setSelected(True)
 
-        self.update_button.clicked.connect(self.update_project)
-
     def validate_step(self):
         """Check if the step is valid.
 
@@ -143,17 +142,35 @@ class StepProjectUpdate02(WizardStep, FORM_CLASS):
         """
         return
 
+    def send_update_request(self, post_data):
+        """Send update request to server and return the responses
+
+        :param post_data: Data to post
+        :type post_data: json string
+
+        :returns: Tuple of request status and error message
+        :rtype: ( bool, str )
+        """
+        update_url = '/api/v1/organizations/%s/projects/%s/' % (
+            self.project['organization']['slug'],
+            self.project['slug']
+        )
+        network = NetworkMixin(get_url_instance() + update_url)
+        network.connect_json_patch(json.dumps(post_data))
+        while not network.reply.isFinished():
+            QCoreApplication.processEvents()
+
+        if not network.error:
+            return True, ''
+        else:
+            return False, network.results.data()
+
     def update_project(self):
         """Update a basic project information in an organization."""
         self.update_button.setText(
             tr('Updating')
         )
         self.update_button.setEnabled(False)
-
-        update_url = '/api/v1/organizations/%s/projects/%s/' % (
-            self.project['organization']['slug'],
-            self.project['slug']
-        )
 
         contact_item_list = self.project_contact_list.selectedItems()
         contacts = []
@@ -176,21 +193,18 @@ class StepProjectUpdate02(WizardStep, FORM_CLASS):
             'contacts': contacts
         }
 
-        network = NetworkMixin(get_url_instance() + update_url)
-        network.connect_json_patch(json.dumps(post_data))
-        while not network.reply.isFinished():
-            QCoreApplication.processEvents()
+        status, message = self.send_update_request(post_data)
 
         self.update_button.setText(
             tr('Update')
         )
         self.update_button.setEnabled(True)
 
-        if not network.error:
+        if status:
             self.update_status_label.setText(
                 tr('Update success')
             )
         else:
             self.update_status_label.setText(
-                'Error: %s' % network.results.data()
+                'Error: %s' % message
             )
