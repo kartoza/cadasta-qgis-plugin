@@ -36,7 +36,7 @@ LOGGER = logging.getLogger('CadastaQGISPlugin')
 class QgsLogHandler(logging.Handler):
     """A logging handler that will log messages to the QGIS logging console."""
 
-    def __init__(self, level=logging.NOTSET):
+    def __init__(self):
         logging.Handler.__init__(self)
 
     def emit(self, record):
@@ -83,20 +83,8 @@ def add_logging_handler_once(logger, handler):
     return True
 
 
-def setup_logger(logger_name, log_file=None, sentry_url=None):
+def setup_logger(logger_name):
     """Run once when the module is loaded and enable logging.
-
-    :param logger_name: The logger name that we want to set up.
-    :type logger_name: str
-
-    :param log_file: Optional full path to a file to write logs to.
-    :type log_file: str
-
-    :param sentry_url: Optional url to sentry api for remote
-        logging. Defaults to http://c64a83978732474ea751d432ab943a6b:
-        d9d8e08786174227b9dcd8a4c3f6e9da@sentry.linfiniti.com/5 which is the
-        sentry project for CadastaQGISPlugin desktop.
-    :type sentry_url: str
 
     Borrowed heavily from this:
     http://docs.python.org/howto/logging-cookbook.html
@@ -112,7 +100,6 @@ def setup_logger(logger_name, log_file=None, sentry_url=None):
     """
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
-    default_handler_level = logging.DEBUG
 
     # create formatter that will be added to the handlers
     formatter = logging.Formatter(

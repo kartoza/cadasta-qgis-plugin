@@ -99,7 +99,8 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
                         location['fields']
                     except KeyError:
                         location['fields'] = dict()
-                    location['fields'][cadasta_field] = properties[layer_field]
+                    location['fields'][cadasta_field] = properties[
+                        layer_field]
         self.set_progress_bar(100)
 
         self.set_status(
@@ -168,7 +169,8 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
 
         for location in self.data['locations']['features']:
             post_data = QByteArray()
-            post_data.append('geometry=%s&' % json.dumps(location['geometry']))
+            post_data.append(
+                'geometry=%s&' % json.dumps(location['geometry']))
             post_data.append('type=%s' % location['fields']['location_type'])
 
             network = NetworkMixin(get_url_instance() + post_url)
