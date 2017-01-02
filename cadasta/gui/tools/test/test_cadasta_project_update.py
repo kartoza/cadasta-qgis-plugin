@@ -72,4 +72,7 @@ class CadastaProjectCreationTest(unittest.TestCase):
                 return_value=(True, '')
         )
         current_step.update_button.click()
-        self.assertEqual(current_step.update_status_label.text(), 'Update success')
+        self.assertEqual(
+                current_step.update_status_label.text(),
+                'Update success'
+        )
