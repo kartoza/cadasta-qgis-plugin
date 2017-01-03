@@ -123,24 +123,13 @@ class StepProjectUpdate02(WizardStep, FORM_CLASS):
 
                 selected_item.setSelected(True)
 
-    def validate_step(self):
-        """Check if the step is valid.
-
-        :returns: Tuple of validation status and error message if any
-        :rtype: ( bool, str )
-        """
-        return (
-            True,
-            ''
-        )
-
     def get_next_step(self):
         """Find the proper step when user clicks the Next button.
 
         :returns: The step to be switched to
-        :rtype: WizardStep instance or None
+        :rtype: WizardStep, None
         """
-        return
+        return None
 
     def send_update_request(self, post_data):
         """Send update request to server and return the responses
