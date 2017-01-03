@@ -60,7 +60,6 @@ class CadastaDatabase(object):
         :return: id of row that is inserted
         :rtype: int
         """
-        db = CadastaDatabase.open_database()
         if 'id' in data:
             # updating existing data
             row_id = data['id']
@@ -99,9 +98,8 @@ class CadastaDatabase(object):
             query_string = ('INSERT INTO %(TABLE)s (%(FIELDS)s) '
                             'VALUES (%(VALUES)s)')
             query_string = query_string % query_data
-        query = QtSql.QSqlQuery(db)
+        query = QtSql.QSqlQuery()
         query.exec_(query_string)
-        db.close()
         if query.numRowsAffected() < 1:
             return -1
         else:
@@ -120,14 +118,12 @@ class CadastaDatabase(object):
         :return: Query that is received
         :rtype: QSqlQuery
         """
-        db = CadastaDatabase.open_database()
         query_string = ('SELECT * FROM %(TABLE)s ' % {'TABLE': table})
         if filter_string:
             query_string += 'WHERE %s' % filter_string
-        query = QtSql.QSqlQuery(db)
+        query = QtSql.QSqlQuery()
         query.exec_(query_string)
         query.last()
-        db.close()
         return query
 
     @staticmethod
@@ -140,16 +136,14 @@ class CadastaDatabase(object):
         :param row_ids: List id of row that will be deleted
         :type row_ids: [int]
         """
-        db = CadastaDatabase.open_database()
         row_ids = ['%s' % row_id for row_id in row_ids]
         query_data = {
             'TABLE': table, 'ID': ','.join(row_ids)
         }
         query_string = 'DELETE FROM %(TABLE)s WHERE ID IN (%(ID)s)'
         query_string = query_string % query_data
-        query = QtSql.QSqlQuery(db)
+        query = QtSql.QSqlQuery()
         query.exec_(query_string)
-        db.close()
 
     @staticmethod
     def get_table_model(table):
@@ -161,7 +155,6 @@ class CadastaDatabase(object):
         :return: Table Model for contact
         :rtype: QSqlTableModel
         """
-        CadastaDatabase.open_database()
         table_model = QSqlTableModel()
         table_model.setTable(table)
         table_model.setEditStrategy(QSqlTableModel.OnManualSubmit)

@@ -28,6 +28,7 @@ from qgis.PyQt.QtGui import (
 )
 # Initialize Qt resources from file resources.py
 # Import the code for the dialog
+from cadasta.database.cadasta_database import CadastaDatabase
 from cadasta.gui.tools.cadasta_dialog import CadastaDialog
 from cadasta.gui.tools.widget.contact_widget import ContactWidget
 from cadasta.gui.tools.widget.options_widget import OptionsWidget
@@ -69,6 +70,7 @@ class CadastaPlugin:
 
         # Declare instance attributes
         self.actions = []
+        CadastaDatabase.open_database()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
