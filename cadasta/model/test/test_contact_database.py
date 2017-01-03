@@ -8,6 +8,7 @@ __date__ = '28/12/16'
 
 import unittest
 
+from cadasta.database.cadasta_database import CadastaDatabase
 from cadasta.model.contact import Contact
 
 
@@ -17,6 +18,7 @@ class ContactDatabaseTest(unittest.TestCase):
     def setUp(self):
         """Runs before each test."""
         self.database_name = 'test'
+        CadastaDatabase.open_database()
 
     def test_insert_fail_database(self):
         """Test Insert Fail Database."""

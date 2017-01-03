@@ -47,7 +47,6 @@ class Contact(object):
         self.name = name
         self.email = email
         self.phone = phone
-        Contact.create_database()
 
     def save(self):
         """Save this object to database.
@@ -86,7 +85,6 @@ class Contact(object):
     @staticmethod
     def create_database():
         """Create table function."""
-        db = CadastaDatabase.open_database()
         query_fields = ('id INTEGER PRIMARY KEY AUTOINCREMENT,'
                         'name varchar(20) NOT NULL,'
                         'email varchar(20),'
@@ -98,7 +96,6 @@ class Contact(object):
                        }
         query = QSqlQuery()
         query.exec_(query_string)
-        db.close()
 
     @staticmethod
     def get_rows(**kwargs):
@@ -143,5 +140,4 @@ class Contact(object):
         :return: Table Model for contact
         :rtype: QSqlTableModel
         """
-        Contact.create_database()
         return CadastaDatabase.get_table_model(Contact.__name__)
