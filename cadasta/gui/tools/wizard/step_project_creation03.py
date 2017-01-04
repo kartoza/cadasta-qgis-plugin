@@ -146,6 +146,7 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
             self.project_upload_result = network.get_json_results()
             self.upload_locations()
             self.upload_parties()
+            self.upload_relationships()
         else:
             self.set_progress_bar(0)
             self.set_status(
@@ -175,12 +176,17 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
             post_data.append('type=%s' % location['fields']['location_type'])
 
             network = NetworkMixin(get_url_instance() + post_url)
-            network.connect_post(post_data)
-            while not network.reply.isFinished():
-                QCoreApplication.processEvents()
 
-            if not network.error:
+            status, result = self._connect_post(network, post_data)
+
+            if status:
                 self.set_progress_bar(self.current_progress + progress_left)
+                try:
+                    result_obj = json.loads(result)
+                    if 'properties' in result_obj:
+                        location['spatial_id'] = result_obj['properties']['id']
+                except ValueError as e:
+                    LOGGER.exception('message')
             else:
                 self.set_progress_bar(0)
                 self.set_status(
@@ -210,6 +216,24 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
         if self.project_upload_result:
             project = self.project_upload_result['slug']
             return '/api/v1/organizations/%s/projects/%s/parties/' % (
+                organisation,
+                project
+            )
+        else:
+            return None
+
+    def _url_post_relationships(self):
+        """Get url to create a new relationship.
+
+        :return: Api url or none if project_upload_result is empty
+        :rtype: str, None
+        """
+        organisation = self.data['organisation']['slug']
+        url = '/api/v1/organizations/%s/projects/%s/relationships/tenure/'
+
+        if self.project_upload_result:
+            project = self.project_upload_result['slug']
+            return url % (
                 organisation,
                 project
             )
@@ -257,18 +281,23 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
             # Project is not uploaded
             return
 
-        network = NetworkMixin(get_url_instance() + post_url)
-
         for layer in self.data['locations']['features']:
             if layer['fields']['party_name'] and layer['fields']['party_type']:
                 post_data = QByteArray()
                 post_data.append('name=%s&' % layer['fields']['party_name'])
                 post_data.append('type=%s&' % layer['fields']['party_type'])
 
+                network = NetworkMixin(get_url_instance() + post_url)
                 status, result = self._connect_post(network, post_data)
 
                 if status:
                     party += 1
+                    try:
+                        result_dict = json.loads(result)
+                        if 'id' in result_dict:
+                            layer['party_id'] = result_dict['id']
+                    except ValueError as e:
+                        LOGGER.exception('message')
                 else:
                     self.set_progress_bar(0)
                     self.set_status(
@@ -288,6 +317,66 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
         else:
             self.set_status(
                 tr('Finished uploading {party} party'.format(party=party))
+            )
+
+        self.set_progress_bar(100)
+
+    def upload_relationships(self):
+        """Upload relationships attribute to cadasta."""
+        self.set_status(
+            tr('Uploading relationship')
+        )
+
+        # reset progress bar
+        current_progress = 0
+        self.set_progress_bar(current_progress)
+        total_layer = len(self.data['locations']['features'])
+        progress_block = 100 / total_layer
+
+        relationship = 0
+
+        url = self._url_post_relationships()
+
+        for layer in self.data['locations']['features']:
+
+            if layer['fields']['relationship_type'] and \
+                    'spatial_id' in layer and \
+                    'party_id' in layer:
+
+                post_data = QByteArray()
+                post_data.append('tenure_type=%s&' % (
+                    layer['fields']['relationship_type']
+                ))
+                post_data.append('spatial_unit=%s&' % layer['spatial_id'])
+                post_data.append('party=%s&' % layer['party_id'])
+
+                network = NetworkMixin(get_url_instance() + url)
+                status, result = self._connect_post(network, post_data)
+
+                if status:
+                    relationship += 1
+                else:
+                    self.set_progress_bar(0)
+                    self.set_status(
+                        tr('Error: ') + result
+                    )
+            else:
+                self.set_status(
+                    tr('No relationship attributes found')
+                )
+
+            current_progress += progress_block
+            self.set_progress_bar(current_progress)
+
+        if relationship == 0:
+            self.set_status(
+                tr('Not uploading any relationship')
+            )
+        else:
+            self.set_status(
+                tr('Finished uploading {num} relationship'.format(
+                    num=relationship
+                ))
             )
 
         self.set_progress_bar(100)

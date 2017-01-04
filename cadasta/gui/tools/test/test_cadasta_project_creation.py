@@ -100,3 +100,42 @@ class CadastaProjectCreationTest(unittest.TestCase):
                 'Finished uploading 2 party'
         )
         self.assertEqual(self.step3.progress_bar.value(), 100)
+
+    def test_uploading_relationships(self):
+        """Test upload relationship function."""
+        self.step3.data = {
+            "locations": {
+                "features": [
+                    {
+                        "fields": {
+                            "party_type": "IN",
+                            "party_name": "TEST1",
+                            "relationship_type": "LL"
+                        },
+                        "spatial_id": '1',
+                        "party_id": '1',
+                    },
+                    {
+                        "fields": {
+                            "party_type": "GR",
+                            "party_name": "TEST2",
+                            "relationship_type": "LL"
+                        },
+                        "spatial_id": '2',
+                        "party_id": '2',
+                    }
+                ]
+            }
+        }
+        self.step3._url_post_relationships = MagicMock(
+            return_value='api-url'
+        )
+        self.step3._connect_post = MagicMock(
+            return_value=(True, '')
+        )
+        self.step3.upload_relationships()
+        self.assertEqual(
+                self.step3.lbl_status.text(),
+                'Finished uploading 2 relationship'
+        )
+        self.assertEqual(self.step3.progress_bar.value(), 100)
