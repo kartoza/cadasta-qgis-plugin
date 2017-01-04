@@ -17,8 +17,8 @@ from qgis.PyQt.QtCore import QCoreApplication, QByteArray
 from cadasta.gui.tools.wizard.wizard_step import WizardStep
 from cadasta.utilities.i18n import tr
 from cadasta.gui.tools.wizard.wizard_step import get_wizard_step_ui_class
-from cadasta.mixin.network_mixin import NetworkMixin
 from cadasta.common.setting import get_url_instance
+from cadasta.api.api_connect import ApiConnect
 
 __copyright__ = "Copyright 2016, Cadasta"
 __license__ = "GPL version 3"
@@ -132,25 +132,23 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
             self.data['organisation']['slug']
         )
 
-        network = NetworkMixin(get_url_instance() + post_url)
-        network.connect_json_post(json.dumps(post_data))
-        while not network.reply.isFinished():
-            QCoreApplication.processEvents()
+        connector = ApiConnect(get_url_instance() + post_url)
+        status, result = self._call_json_post(connector, json.dumps(post_data))
 
         self.set_progress_bar(self.current_progress + 25)
         self.set_status(
             tr('Finished uploading project')
         )
 
-        if not network.error:
-            self.project_upload_result = network.get_json_results()
+        if status:
+            self.project_upload_result = json.loads(result)
             self.upload_locations()
             self.upload_parties()
             self.upload_relationships()
         else:
             self.set_progress_bar(0)
             self.set_status(
-                'Error: %s' % network.results.data()
+                'Error: %s' % result
             )
 
         self.set_status(tr('Finished'))
@@ -175,9 +173,8 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
             post_data.append('geometry=%s&' % json.dumps(location['geometry']))
             post_data.append('type=%s' % location['fields']['location_type'])
 
-            network = NetworkMixin(get_url_instance() + post_url)
-
-            status, result = self._connect_post(network, post_data)
+            connector = ApiConnect(get_url_instance() + post_url)
+            status, result = self._call_post(connector, post_data)
 
             if status:
                 self.set_progress_bar(self.current_progress + progress_left)
@@ -190,7 +187,7 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
             else:
                 self.set_progress_bar(0)
                 self.set_status(
-                    'Error: %s' % network.results.data()
+                    'Error: %s' % result
                 )
                 failed += 1
 
@@ -240,27 +237,6 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
         else:
             return None
 
-    def _connect_post(self, network, post_data):
-        """Call post method.
-
-        :param network: Network connector
-        :type network: NetworkMixin
-
-        :param post_data: data to post
-        :type post_data: QByteArray
-
-        :returns: Tuple of post status and results
-        :rtype: ( bool, str )
-        """
-        network.connect_post(post_data)
-        while not network.reply.isFinished():
-            QCoreApplication.processEvents()
-
-        if not network.error:
-            return True, network.results.data()
-        else:
-            return False, network.results.data()
-
     def upload_parties(self):
         """Upload party from this project."""
         self.set_status(
@@ -287,8 +263,8 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
                 post_data.append('name=%s&' % layer['fields']['party_name'])
                 post_data.append('type=%s&' % layer['fields']['party_type'])
 
-                network = NetworkMixin(get_url_instance() + post_url)
-                status, result = self._connect_post(network, post_data)
+                connector = ApiConnect(get_url_instance() + post_url)
+                status, result = self._call_post(connector, post_data)
 
                 if status:
                     party += 1
@@ -350,8 +326,8 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
                 post_data.append('spatial_unit=%s&' % layer['spatial_id'])
                 post_data.append('party=%s&' % layer['party_id'])
 
-                network = NetworkMixin(get_url_instance() + url)
-                status, result = self._connect_post(network, post_data)
+                connector = ApiConnect(get_url_instance() + url)
+                status, result = self._call_post(connector, post_data)
 
                 if status:
                     relationship += 1
@@ -387,6 +363,38 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
            This method must be implemented in derived classes.
 
         :returns: The step to be switched to
-        :rtype: WizardStep instance or None
+        :rtype: WizardStep, None
         """
         return None
+
+    def _call_post(self, connector, post_data):
+        """Call post method from connector.
+
+        For testing purpose.
+
+        :param connector: Api connector instance
+        :type connector: ApiConnect
+
+        :param post_data: data to post
+        :type post_data: QByteArray
+
+        :returns: Tuple of post status and results
+        :rtype: ( bool, str )
+        """
+        return connector.post(post_data)
+
+    def _call_json_post(self, connector, post_data):
+        """Call post method with json string from connector.
+
+        For testing purpose.
+
+        :param connector: Api connector instance
+        :type connector: ApiConnect
+
+        :param post_data: data to post
+        :type post_data: str
+
+        :returns: Tuple of post status and results
+        :rtype: ( bool, str )
+        """
+        return connector.post_json(post_data)

@@ -12,7 +12,6 @@ __author__ = 'dimas@kartoza.com'
 __date__ = '2016-12-21'
 __copyright__ = 'Copyright 2016, Kartoza'
 
-import os
 import unittest
 from mock import MagicMock
 from qgis.testing.mocked import get_iface
@@ -21,7 +20,6 @@ from qgis.utils import iface
 from cadasta.gui.tools.wizard.project_creation_wizard import (
     ProjectCreationWizard
 )
-from cadasta.model.contact import Contact
 
 if iface:
     IFACE = iface
@@ -91,7 +89,7 @@ class CadastaProjectCreationTest(unittest.TestCase):
         self.step3._url_post_parties = MagicMock(
             return_value='api-url'
         )
-        self.step3._connect_post = MagicMock(
+        self.step3._call_post = MagicMock(
             return_value=(True, '')
         )
         self.step3.upload_parties()
@@ -130,7 +128,7 @@ class CadastaProjectCreationTest(unittest.TestCase):
         self.step3._url_post_relationships = MagicMock(
             return_value='api-url'
         )
-        self.step3._connect_post = MagicMock(
+        self.step3._call_post = MagicMock(
             return_value=(True, '')
         )
         self.step3.upload_relationships()
