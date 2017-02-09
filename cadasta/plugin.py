@@ -48,6 +48,7 @@ from cadasta.common.setting import get_authtoken
 # Initialize Qt resources from file resources.py
 # Import the code for the dialog
 from cadasta.utilities.resources import resources_path
+from cadasta.utilities.utilities import Utilities
 
 LOGGER = logging.getLogger('CadastaQGISPlugin')
 
@@ -69,9 +70,26 @@ class CadastaPlugin:
         self.project_creation_wizard = None
         self.project_update_wizard = None
         self.wizard = None
+        self.iface.currentLayerChanged.connect(self.layer_changed)
+        self.authorized = False
 
         # Declare instance attributes
         self.actions = []
+
+    def layer_changed(self, layer):
+        """Function that triggered when layer changed.
+
+        :param layer: New layer that selected.
+        :type layer: QgsVectorLayer
+        """
+        if self.authorized and layer:
+            information = Utilities.get_basic_information_by_vector(layer)
+            if information:
+                self.project_update_wizard.setEnabled(True)
+            else:
+                self.project_update_wizard.setEnabled(False)
+        else:
+            self.project_update_wizard.setEnabled(False)
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -172,6 +190,7 @@ class CadastaPlugin:
                 self.tr(u'&Cadasta'),
                 action)
 
+        self.project_update_wizard.setEnabled(False)
         if get_authtoken():
             self._enable_authenticated_menu()
         else:
@@ -219,10 +238,13 @@ class CadastaPlugin:
     def _enable_authenticated_menu(self):
         """Enable menu that requires auth token to proceed."""
         self.project_creation_wizard.setEnabled(True)
+        self.authorized = True
 
     def _disable_authenticated_menu(self):
         """Disable menu that requires auth token to proceed."""
         self.project_creation_wizard.setEnabled(False)
+        self.project_update_wizard.setEnabled(False)
+        self.authorized = False
 
     # ------------------------------------------------------------------------
     # initiate project creation dialog
