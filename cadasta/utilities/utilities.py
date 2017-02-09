@@ -87,6 +87,7 @@ class Utilities(object):
         :rtype: dict
         """
         # checking by names
+        LOGGER.debug(layer.name())
         names = layer.name().split('/')
         if len(names) == 2:
             organization_slug = names[0]
