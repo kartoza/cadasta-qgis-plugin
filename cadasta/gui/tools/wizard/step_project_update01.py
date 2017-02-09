@@ -102,7 +102,7 @@ class StepProjectUpdate01(WizardStep, FORM_CLASS):
         projects = sorted(projects, key=lambda k: k['name'])
         for project in projects:
             self.project_combo_box.addItem(
-                project['name'], project['information'])
+                project['name'], project)
 
     def project_combo_box_changed(self):
         """Update description when combo box changed."""

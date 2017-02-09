@@ -12,9 +12,11 @@ This module provides: Project Update Step 5 : Upload update data
 """
 import logging
 import json
+from PyQt4.QtCore import Qt
 from cadasta.gui.tools.wizard.wizard_step import WizardStep
 from cadasta.gui.tools.wizard.wizard_step import get_wizard_step_ui_class
 from PyQt4.QtCore import QCoreApplication
+from cadasta.utilities.utilities import Utilities
 from cadasta.api.api_connect import ApiConnect
 from cadasta.common.setting import get_url_instance
 
@@ -46,8 +48,8 @@ class StepProjectUpdate05(WizardStep, FORM_CLASS):
 
     def set_widgets(self):
         """Set all widgets on the tab."""
-        self.project = self.parent.project
-        self.layer = self.parent.layer
+        self.project = self.parent.project['information']
+        self.layer = self.parent.project['vector_layer']
         self.lbl_status.setText(
             self.tr('Upload the data?')
         )
@@ -79,64 +81,82 @@ class StepProjectUpdate05(WizardStep, FORM_CLASS):
         self.progress_bar.setValue(value)
         QCoreApplication.processEvents()
 
-    def upload_update(self):
-        """Upload the updates"""
-        self.progress_bar.setVisible(True)
-        self.submit_button.setVisible(False)
-        self.parent.back_button.setEnabled(False)
+    def update_project(self):
+        """Update a basic project information in an organization."""
+        step2 = self.parent.step_project_update02
 
-        self.set_status(
-            self.tr('Update locations')
-        )
+        contact_item_list = step2.project_contact_list.selectedItems()
+        contacts = []
+        for contact_item in contact_item_list:
+            contact = contact_item.data(Qt.UserRole)
+            contacts.append({
+                'name': contact.name,
+                'tel': contact.phone,
+                'email': contact.email
+            })
 
-        fields = self.parent.get_mapped_fields()
+        access = 'private' if step2.access_checkbox.isChecked() else 'public'
+        post_data = {
+            'name': step2.project_name_text.displayText(),
+            'description': step2.project_desc_text.toPlainText(),
+            'urls': [
+                step2.project_url_text.displayText()
+            ],
+            'access': access,
+            'contacts': contacts
+        }
+
+        status, response = step2.send_update_request(post_data)
+        if status:
+            Utilities.save_project_basic_information(response)
+            self.set_status(
+                self.tr('Update success')
+            )
+        else:
+            self.set_status(
+                'Error: %s' % response
+            )
+
+    def update_spatial_location(self):
+        """Update spatial information."""
         update_loc_api = '/api/v1/organizations/{organization_slug}/' \
                          'projects/{project_slug}/spatial/{spatial_unit_id}/'
 
-        self.set_progress_bar(25)
+        location_type_idx = self.layer.fieldNameIndex('type')
+        location_id_idx = self.layer.fieldNameIndex('id')
 
-        for location in self.parent.locations['features']:
+        features = self.layer.getFeatures()
+
+        for feature in features:
+            attributes = feature.attributes()
             api = update_loc_api.format(
                 organization_slug=self.project['organization']['slug'],
                 project_slug=self.project['slug'],
-                spatial_unit_id=location['properties']['id']
+                spatial_unit_id=attributes[location_id_idx]
             )
 
-            location_type_field = fields['location_type']
-            location_type_idx = self.layer.fieldNameIndex(location_type_field)
-            location_id_idx = self.layer.fieldNameIndex('id')
-
-            features = self.layer.getFeatures()
-
-            for feature in features:
-                attributes = feature.attributes()
-                if attributes[location_id_idx] == location['properties']['id']:
-                    geojson = feature.geometry().exportToGeoJSON()
-                    self.upload_update_locations(
+            if attributes[location_id_idx]:
+                geojson = feature.geometry().exportToGeoJSON()
+                self.upload_update_locations(
                         api,
                         geojson,
                         attributes[location_type_idx]
-                    )
-                if not attributes[location_id_idx]:
-                    # New location
-                    geojson = feature.geometry().exportToGeoJSON()
-                    project_id = self.add_new_locations(
+                )
+            if not attributes[location_id_idx]:
+                # New location
+                geojson = feature.geometry().exportToGeoJSON()
+                project_id = self.add_new_locations(
                         geojson,
                         attributes[location_type_idx]
-                    )
-                    self.layer.startEditing()
-                    self.layer.changeAttributeValue(
+                )
+                self.layer.startEditing()
+                self.layer.changeAttributeValue(
                         feature.id(), 1, project_id
-                    )
-                    self.layer.commitChanges()
+                )
+                self.layer.commitChanges()
 
-        self.set_progress_bar(50)
-
-        self.set_status(
-            self.tr('Finished update locations')
-        )
-
-        # Update parties
+    def update_location_attributes(self):
+        """Update relationship and party attribute for location"""
         if not self.parent.parties:
             self.set_progress_bar(100)
             return
@@ -178,6 +198,32 @@ class StepProjectUpdate05(WizardStep, FORM_CLASS):
             self.tr('Finished update parties')
         )
 
+    def upload_update(self):
+        """Upload the updates"""
+        self.progress_bar.setVisible(True)
+        self.submit_button.setVisible(False)
+        self.parent.back_button.setEnabled(False)
+
+        self.set_status(
+            self.tr('Update project information')
+        )
+        self.update_project()
+        self.set_progress_bar(25)
+        self.set_status(
+            self.tr('Finished update project information')
+        )
+
+        self.set_status(
+            self.tr('Update spatial information')
+        )
+        self.set_progress_bar(50)
+        self.update_spatial_location()
+        self.set_status(
+            self.tr('Finished update locations')
+        )
+
+        self.set_progress_bar(100)
+
     def upload_update_locations(self, api, geometry, location_type):
         """Upload update location data.
 
@@ -203,7 +249,6 @@ class StepProjectUpdate05(WizardStep, FORM_CLASS):
                 self.tr('Location updated.')
             )
         else:
-            self.set_progress_bar(0)
             self.set_status(
                 'Error: %s' % result
             )
@@ -238,7 +283,6 @@ class StepProjectUpdate05(WizardStep, FORM_CLASS):
             )
             return json.loads(result)['properties']['id']
         else:
-            self.set_progress_bar(0)
             self.set_status(
                 'Error: %s' % result
             )

@@ -44,8 +44,6 @@ class ProjectUpdateWizard(WizardDialog):
 
     step_project_update01 = None
     step_project_update02 = None
-    step_project_update03 = None
-    step_project_update04 = None
     step_project_update05 = None
 
     def __init__(self, parent=None, iface=None):
@@ -93,14 +91,10 @@ class ProjectUpdateWizard(WizardDialog):
         """Append widgets to stacked widget."""
         self.step_project_update01 = StepProjectUpdate01(self)
         self.step_project_update02 = StepProjectUpdate02(self)
-        self.step_project_update03 = StepProjectUpdate03(self)
-        self.step_project_update04 = StepProjectUpdate04(self)
         self.step_project_update05 = StepProjectUpdate05(self)
 
         self.stackedWidget.addWidget(self.step_project_update01)
         self.stackedWidget.addWidget(self.step_project_update02)
-        self.stackedWidget.addWidget(self.step_project_update03)
-        self.stackedWidget.addWidget(self.step_project_update04)
         self.stackedWidget.addWidget(self.step_project_update05)
 
     def prepare_the_next_step(self, new_step):
@@ -113,6 +107,3 @@ class ProjectUpdateWizard(WizardDialog):
             self.project = \
                 self.step_project_update01.selected_project()
 
-    def get_mapped_fields(self):
-        """Get fields from step 4"""
-        return self.step_project_update04.cadasta_fields()

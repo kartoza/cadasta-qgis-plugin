@@ -108,7 +108,8 @@ class Utilities(object):
                 projects.append({
                     'id': layer.id(),
                     'name': layer.name(),
-                    'information': information
+                    'information': information,
+                    'vector_layer': layer
                 })
 
         return projects
