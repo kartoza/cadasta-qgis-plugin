@@ -13,6 +13,7 @@ This module provides: Login : Login for cadasta and save authnetication
 import json
 import logging
 import os
+from qgis.core import QgsVectorLayer, QgsMapLayerRegistry
 from cadasta.common.setting import get_path_data
 from cadasta.utilities.resources import get_project_path
 
@@ -77,6 +78,42 @@ class Utilities(object):
             return {}
 
     @staticmethod
+    def get_downloaded_projects(organization):
+        """Get all downloaded projects.
+
+        :return: downloaded projects
+        :rtype: list of dict
+        """
+        file_path = get_path_data(organization)
+
+        list_files = []
+
+        for filename in os.listdir(file_path):
+            if not os.path.isfile(os.path.join(file_path, filename)):
+                continue
+            if '.json' not in filename:
+                continue
+            project_name, file_extension = os.path.splitext(filename)
+            list_files.append(organization+'/'+project_name)
+
+        projects = []
+
+        for layer in QgsMapLayerRegistry.instance().mapLayers().values():
+            if layer.name() in list_files:
+                project_slug = layer.name().split('/')[1]
+                information = Utilities.get_basic_information(
+                        organization,
+                        project_slug)
+
+                projects.append({
+                    'id': layer.id(),
+                    'name': layer.name(),
+                    'information': information
+                })
+
+        return projects
+
+    @staticmethod
     def get_basic_information_by_vector(layer):
         """Get basic information that already saved.
 
@@ -87,7 +124,6 @@ class Utilities(object):
         :rtype: dict
         """
         # checking by names
-        LOGGER.debug(layer.name())
         names = layer.name().split('/')
         if len(names) == 2:
             organization_slug = names[0]
