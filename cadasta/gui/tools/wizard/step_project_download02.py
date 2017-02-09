@@ -19,6 +19,7 @@ from cadasta.gui.tools.wizard.wizard_step import get_wizard_step_ui_class
 from cadasta.api.organization_project import (
     OrganizationProjectSpatial
 )
+from cadasta.utilities.utilities import Utilities
 
 __copyright__ = "Copyright 2016, Cadasta"
 __license__ = "GPL version 3"
@@ -119,3 +120,5 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
         vlayer = QgsVectorLayer(
             filename, "%s/%s" % (organization_slug, project_slug), "ogr")
         QgsMapLayerRegistry.instance().addMapLayer(vlayer)
+        # save basic information
+        Utilities.save_project_basic_information(self.project)
