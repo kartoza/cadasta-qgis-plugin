@@ -71,7 +71,6 @@ class CadastaPlugin:
         self.project_update_wizard = None
         self.wizard = None
         self.iface.currentLayerChanged.connect(self.layer_changed)
-        self.authorized = False
 
         # Declare instance attributes
         self.actions = []
@@ -82,7 +81,7 @@ class CadastaPlugin:
         :param layer: New layer that selected.
         :type layer: QgsVectorLayer
         """
-        if self.authorized and layer:
+        if get_authtoken() and layer:
             information = Utilities.get_basic_information_by_vector(layer)
             if information:
                 self.project_update_wizard.setEnabled(True)
@@ -238,13 +237,11 @@ class CadastaPlugin:
     def _enable_authenticated_menu(self):
         """Enable menu that requires auth token to proceed."""
         self.project_creation_wizard.setEnabled(True)
-        self.authorized = True
 
     def _disable_authenticated_menu(self):
         """Disable menu that requires auth token to proceed."""
         self.project_creation_wizard.setEnabled(False)
         self.project_update_wizard.setEnabled(False)
-        self.authorized = False
 
     # ------------------------------------------------------------------------
     # initiate project creation dialog
