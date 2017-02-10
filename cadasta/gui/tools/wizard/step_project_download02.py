@@ -27,7 +27,6 @@ from cadasta.api.organization_project import (
 from cadasta.utilities.utilities import Utilities
 from cadasta.api.api_connect import ApiConnect
 from cadasta.common.setting import get_url_instance
-from cadasta.model.party import Party
 from cadasta.vector import tools
 
 __copyright__ = "Copyright 2016, Cadasta"

@@ -156,7 +156,7 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
                 )
                 self.layer.commitChanges()
 
-    def update_relation_attributes(self):
+    def update_relationship_attributes(self):
         """Update relationship attribute for location"""
 
         # Get relationship csv
@@ -164,7 +164,7 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
         if not features:
             return
 
-        relationship_id_idx = self.layer.fieldNameIndex('relationship')
+        relationship_id_idx = self.layer.fieldNameIndex('relationship_layer_id')
         if not relationship_id_idx:
             return
 
@@ -173,13 +173,11 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
             attributes = feature.attributes()
             if attributes[relationship_id_idx]:
                 relationship_id = attributes[relationship_id_idx]
+            break
         if not relationship_id:
             return
 
-        relationship_layer = None
-        for layer in QgsMapLayerRegistry.instance().mapLayers().values():
-            if layer.id() == relationship_id:
-                relationship_layer = layer
+        relationship_layer = QgsMapLayerRegistry.instance().mapLayer(relationship_id)
         if not relationship_layer:
             return
 
@@ -187,9 +185,6 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
         spatial_id_idx = 0
         relationship_id_idx = 1
         relationship_type_idx = 2
-        party_id_idx = 3
-        party_name_idx = 4
-        party_type_idx = 5
 
         update_api = '/api/v1/organizations/{organization_slug}/projects/' \
                      '{project_slug}/relationships/tenure/{relationship_id}/'
@@ -204,6 +199,52 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
             self.upload_relationship(
                 api,
                 attributes[relationship_type_idx],
+            )
+
+    def update_party_attributes(self):
+        """Update party attribute for this project."""
+
+        # Get relationship csv
+        features = self.layer.getFeatures()
+        if not features:
+            return
+
+        party_id_idx = self.layer.fieldNameIndex('party_layer_id')
+        if not party_id_idx:
+            return
+
+        party_id = None
+        for feature in features:
+            attributes = feature.attributes()
+            if attributes[party_id_idx]:
+                party_id = attributes[party_id_idx]
+                break
+        if not party_id:
+            return
+
+        party_layer = QgsMapLayerRegistry.instance().mapLayer(party_id)
+        if not party_layer:
+            return
+
+        party_feats = party_layer.getFeatures()
+        id_idx = 0
+        name_idx = 1
+        type_idx = 2
+
+        update_api = '/api/v1/organizations/{organization_slug}/projects/' \
+                     '{project_slug}/parties/{party_id}/'
+
+        for feature in party_feats:
+            attributes = feature.attributes()
+            api = update_api.format(
+                organization_slug=self.project['organization']['slug'],
+                project_slug=self.project['slug'],
+                party_id=attributes[id_idx]
+            )
+            self.upload_parties(
+                api,
+                attributes[name_idx],
+                attributes[type_idx]
             )
 
     def upload_update(self):
@@ -231,12 +272,21 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
         )
 
         self.set_status(
-                self.tr('Update relationship')
+            self.tr('Update relationship')
         )
-        self.set_progress_bar(75)
-        self.update_relation_attributes()
+        self.set_progress_bar(60)
+        self.update_relationship_attributes()
         self.set_status(
-                self.tr('Finished update relationship')
+            self.tr('Finished update relationship')
+        )
+
+        self.set_status(
+            self.tr('Update parties')
+        )
+        self.set_progress_bar(80)
+        self.update_party_attributes()
+        self.set_status(
+            self.tr('Finished update party')
         )
 
         self.set_progress_bar(100)
