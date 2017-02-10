@@ -12,10 +12,11 @@ This module provides: Project Download Step 2 : Download Project
 """
 import json
 import csv
+import os
 import logging
 from uuid import uuid4
 from PyQt4.QtCore import QVariant
-from qgis.core import QgsVectorLayer, QgsMapLayerRegistry, QgsField, QGis, QgsFeature, QgsGeometry
+from qgis.core import QgsVectorLayer, QgsMapLayerRegistry, QgsField, QGis, QgsFeature, QCoreApplication
 from cadasta.common.setting import get_path_data, get_csv_path
 from cadasta.gui.tools.wizard.wizard_step import WizardStep
 from cadasta.gui.tools.wizard.wizard_step import get_wizard_step_ui_class
@@ -109,82 +110,111 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
         self.parent.next_button.setEnabled(True)
         self.warning_label.setText(self.loaded_label_string)
 
-    def create_relationship_csv(self, vector_layer, csv_file):
-        """Create csv file with relationship data.
+    def parties_layer(self, vector_layer):
+        """Create parties layer.
 
         :param vector_layer: QGS vector layer in memory
         :type vector_layer: QgsVectorLayer
-
-        :param csv_file: csv file path
-        :type csv_file: str
         """
         organization_slug = self.project['organization']['slug']
         project_slug = self.project['slug']
+        attribute = 'parties'
+
+        csv_path = get_csv_path(organization_slug, project_slug, attribute)
+
+        if os.path.isfile(csv_path):
+            os.remove(csv_path)
 
         api = '/api/v1/organizations/{organization_slug}/projects/' \
-              '{project_slug}/spatial/{spatial_unit_id}/relationships/'
-
-        features = vector_layer.getFeatures()
-        spatial_id_index = vector_layer.fieldNameIndex('id')
-
-        csv_writer = csv.writer(open(csv_file, 'wb'), delimiter=',')
-        csv_writer.writerow([
-            'spatial_id',
-            'rel_id',
-            'rel_name',
-            'party_id',
-            'party_name',
-            'party_type'])
-
-        for index, feature in enumerate(features):
-            attributes = feature.attributes()
-            spatial_api = api.format(
+              '{project_slug}/parties/'.format(
                 organization_slug=organization_slug,
-                project_slug=project_slug,
-                spatial_unit_id=attributes[spatial_id_index]
-            )
-            connector = ApiConnect(get_url_instance() + spatial_api)
-            status, results = connector.get()
+                project_slug=project_slug)
 
-            if not status or len(results) == 0:
-                continue
+        connector = ApiConnect(get_url_instance() + api)
+        status, results = connector.get()
 
+        if not status:
+            return
+
+        party_layer = tools.create_memory_layer(
+                layer_name='%s/%s_%s' % (organization_slug, project_slug, attribute),
+                geometry=QGis.NoGeometry,
+                fields=[
+                    QgsField('id', QVariant.String, "string"),
+                    QgsField('name', QVariant.String, "string"),
+                    QgsField('type', QVariant.String, "string")
+                ]
+        )
+
+        QgsMapLayerRegistry.instance().addMapLayer(party_layer)
+
+        for party in results:
+            party_layer.startEditing()
+            feature = QgsFeature()
+            feature.setAttributes([
+                party['id'],
+                party['name'],
+                party['type']
+            ])
+            party_layer.addFeature(feature, True)
+            party_layer.commitChanges()
+            QCoreApplication.processEvents()
+
+        LOGGER.debug(party_layer)
+
+        # Save relationship id to spatial layer
+        vector_layer.startEditing()
+        vector_layer.dataProvider().addAttributes([
+            QgsField('party_layer_id', QVariant.String),
+        ])
+        vector_layer.commitChanges()
+
+        for index, feat in enumerate(vector_layer.getFeatures()):
+            # Edit the attribute value
+            vector_layer.startEditing()
             try:
-                for result in results:
-                    csv_writer.writerow([
-                        attributes[spatial_id_index],
-                        result['id'],
-                        result['rel_class'],
-                        result['party']['id'],
-                        result['party']['name'],
-                        result['party']['type']
-                    ])
-            except (IndexError, KeyError):
+                vector_layer.changeAttributeValue(
+                    feat.id(), 3, party_layer.id()
+                )
+            except (IndexError, KeyError) as e:
                 continue
 
-    def relationships_attribute(self, vector_layer):
-        """Create relationship csv and add csv to layer memory,
-        add relationship layer id to spatial attribute table.
+            # Commit changes
+            vector_layer.commitChanges()
+
+        Utilities.add_tabular_layer(
+            party_layer,
+            organization_slug,
+            project_slug,
+            attribute
+        )
+
+    def relationships_layer(self, vector_layer):
+        """Create relationship layer.
 
         :param vector_layer: QGS vector layer in memory
         :type vector_layer: QgsVectorLayer
         """
         organization_slug = self.project['organization']['slug']
         project_slug = self.project['slug']
+        attribute = 'relationships'
 
         api = '/api/v1/organizations/{organization_slug}/projects/' \
               '{project_slug}/spatial/{spatial_unit_id}/relationships/'
+
+        csv_path = get_csv_path(organization_slug, project_slug, attribute)
+
+        if os.path.isfile(csv_path):
+            os.remove(csv_path)
 
         relationship_layer = tools.create_memory_layer(
-            layer_name='%s/%s_relationships' % (organization_slug, project_slug),
+            layer_name='%s/%s_%s' % (organization_slug, project_slug, attribute),
             geometry=QGis.NoGeometry,
             fields=[
                 QgsField('spatial_id', QVariant.String, "string"),
                 QgsField('rel_id', QVariant.String, "string"),
                 QgsField('rel_name', QVariant.String, "string"),
                 QgsField('party_id', QVariant.String, "string"),
-                QgsField('party_name', QVariant.String, "string"),
-                QgsField('party_type', QVariant.String, "string"),
             ]
         )
 
@@ -215,8 +245,6 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
                         result['id'],
                         result['tenure_type'],
                         result['party']['id'],
-                        result['party']['name'],
-                        result['party']['type'],
                         ])
                     relationship_layer.addFeature(fet, True)
                     relationship_layer.commitChanges()
@@ -227,15 +255,14 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
             relationship_layer,
             organization_slug,
             project_slug,
-            'relationships'
+            attribute
         )
 
-        # Enter editing mode
+        # Save relationship id to spatial layer
         vector_layer.startEditing()
         vector_layer.dataProvider().addAttributes([
             QgsField('relationship_layer_id', QVariant.String),
         ])
-        # Save the new fields
         vector_layer.commitChanges()
 
         for index, feat in enumerate(vector_layer.getFeatures()):
@@ -271,6 +298,7 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
         vlayer = QgsVectorLayer(
             filename, "%s/%s" % (organization_slug, project_slug), "ogr")
         QgsMapLayerRegistry.instance().addMapLayer(vlayer)
-        self.relationships_attribute(vlayer)
+        self.relationships_layer(vlayer)
+        self.parties_layer(vlayer)
         # save basic information
         Utilities.save_project_basic_information(self.project)
