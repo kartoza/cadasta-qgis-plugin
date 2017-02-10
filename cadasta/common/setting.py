@@ -185,6 +185,9 @@ def get_csv_path(organization_slug=None, project_slug=None, attribute=None):
     :param project_slug: project slug for filename
     :type project_slug: str
 
+    :param attribute: additional csv name
+    :type attribute: str
+
     :return: Absoulte data path
     :rtype: str
     """
