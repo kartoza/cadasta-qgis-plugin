@@ -14,7 +14,11 @@ import json
 import logging
 import os
 import csv
-from qgis.core import QgsVectorLayer, QgsMapLayerRegistry, QgsVectorFileWriter, QgsFeature
+from qgis.core import (
+    QgsVectorLayer,
+    QgsMapLayerRegistry,
+    QgsVectorFileWriter,
+    QgsFeature)
 from cadasta.common.setting import get_path_data, get_csv_path
 from cadasta.utilities.resources import get_project_path
 
@@ -95,7 +99,7 @@ class Utilities(object):
             if '.json' not in filename:
                 continue
             project_name, file_extension = os.path.splitext(filename)
-            list_files.append(organization+'/'+project_name)
+            list_files.append(organization + '/' + project_name)
 
         projects = []
 
@@ -154,7 +158,11 @@ class Utilities(object):
                 return information
 
     @staticmethod
-    def add_tabular_layer(tabular_layer, organization_slug, project_slug, attribute):
+    def add_tabular_layer(
+            tabular_layer,
+            organization_slug,
+            project_slug,
+            attribute):
         """Add a tabular layer to the folder.
 
         :param tabular_layer: The layer to add.
@@ -186,8 +194,13 @@ class Utilities(object):
         return True, file_path
 
     @staticmethod
-    def load_csv_file_to_layer(layer, organization_slug, project_slug, attribute):
-        """Check if csv file is exist for layer, then add attribute from csv file to layer
+    def load_csv_file_to_layer(
+            layer,
+            organization_slug,
+            project_slug,
+            attribute):
+        """Check if csv file is exist for layer,
+        then add attribute from csv file to layer
 
         :param layer: layer to be added
         :type layer: QgsVectorLayer

@@ -40,6 +40,7 @@ class StepProjectUpdate01(WizardStep, FORM_CLASS):
         super(StepProjectUpdate01, self).__init__(parent)
         self.parent = parent
         self.project_api = None
+        self.organization = Organization()
 
     def set_widgets(self):
         """Set all widgets on the tab."""
@@ -119,12 +120,20 @@ class StepProjectUpdate01(WizardStep, FORM_CLASS):
         except (TypeError, KeyError):
             return
 
+    def get_downloaded_project(self, organization_slug):
+        """Get downloaded project from organization slug.
+
+        :param organization_slug: Organization slug of project
+        :type organization_slug: str
+        """
+        return Utilities.get_downloaded_projects(organization_slug)
+
     def get_available_projects(self):
         """Get available projects."""
         self.get_available_projects_button.setEnabled(False)
 
         # Get organization with read/update permission
-        status, results = Organization().organizations_project_filtered()
+        status, results = self.organization.organizations_project_filtered()
 
         projects = []
 
@@ -134,6 +143,8 @@ class StepProjectUpdate01(WizardStep, FORM_CLASS):
             return
 
         for organization in results:
-            projects.extend(Utilities.get_downloaded_projects(organization['slug']))
+            projects.extend(
+                self.get_downloaded_project(organization['slug'])
+            )
 
         self.get_available_projects_finished(projects)

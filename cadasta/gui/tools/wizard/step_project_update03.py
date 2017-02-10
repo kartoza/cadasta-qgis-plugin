@@ -164,7 +164,9 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
         if not features:
             return
 
-        relationship_id_idx = self.layer.fieldNameIndex('relationship_layer_id')
+        relationship_id_idx = self.layer.fieldNameIndex(
+                'relationship_layer_id'
+        )
         if not relationship_id_idx:
             return
 
@@ -177,7 +179,9 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
         if not relationship_id:
             return
 
-        relationship_layer = QgsMapLayerRegistry.instance().mapLayer(relationship_id)
+        relationship_layer = QgsMapLayerRegistry.instance().mapLayer(
+                relationship_id
+        )
         if not relationship_layer:
             return
 

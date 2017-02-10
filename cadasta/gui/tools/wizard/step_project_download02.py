@@ -16,7 +16,13 @@ import os
 import logging
 from uuid import uuid4
 from PyQt4.QtCore import QVariant
-from qgis.core import QgsVectorLayer, QgsMapLayerRegistry, QgsField, QGis, QgsFeature, QCoreApplication
+from qgis.core import (
+    QgsVectorLayer,
+    QgsMapLayerRegistry,
+    QgsField,
+    QGis,
+    QgsFeature,
+    QCoreApplication)
 from cadasta.common.setting import get_path_data, get_csv_path
 from cadasta.gui.tools.wizard.wizard_step import WizardStep
 from cadasta.gui.tools.wizard.wizard_step import get_wizard_step_ui_class
@@ -136,7 +142,10 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
             return
 
         party_layer = tools.create_memory_layer(
-                layer_name='%s/%s_%s' % (organization_slug, project_slug, attribute),
+                layer_name='%s/%s_%s' % (
+                    organization_slug,
+                    project_slug,
+                    attribute),
                 geometry=QGis.NoGeometry,
                 fields=[
                     QgsField('id', QVariant.String, "string"),
@@ -201,13 +210,19 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
         api = '/api/v1/organizations/{organization_slug}/projects/' \
               '{project_slug}/spatial/{spatial_unit_id}/relationships/'
 
-        csv_path = get_csv_path(organization_slug, project_slug, attribute)
+        csv_path = get_csv_path(
+                organization_slug,
+                project_slug,
+                attribute)
 
         if os.path.isfile(csv_path):
             os.remove(csv_path)
 
         relationship_layer = tools.create_memory_layer(
-            layer_name='%s/%s_%s' % (organization_slug, project_slug, attribute),
+            layer_name='%s/%s_%s' % (
+                organization_slug,
+                project_slug,
+                attribute),
             geometry=QGis.NoGeometry,
             fields=[
                 QgsField('spatial_id', QVariant.String, "string"),

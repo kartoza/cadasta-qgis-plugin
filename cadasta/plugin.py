@@ -92,7 +92,11 @@ class CadastaPlugin:
             try:
                 project_slug, attribute = layer_names[1].split('_')
                 organization_slug = layer_names[0]
-                Utilities.add_tabular_layer(layer, organization_slug, project_slug, attribute)
+                Utilities.add_tabular_layer(
+                        layer,
+                        organization_slug,
+                        project_slug,
+                        attribute)
             except ValueError:
                 return
 
@@ -109,7 +113,11 @@ class CadastaPlugin:
             try:
                 project_slug, attribute = layer_names[1].split('_')
                 organization_slug = layer_names[0]
-                Utilities.load_csv_file_to_layer(layer, organization_slug, project_slug, attribute)
+                Utilities.load_csv_file_to_layer(
+                        layer,
+                        organization_slug,
+                        project_slug,
+                        attribute)
             except ValueError:
                 return
 

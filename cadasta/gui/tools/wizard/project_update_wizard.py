@@ -100,4 +100,3 @@ class ProjectUpdateWizard(WizardDialog):
         if new_step == self.step_project_update02:
             self.project = \
                 self.step_project_update01.selected_project()
-

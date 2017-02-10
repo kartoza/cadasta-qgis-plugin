@@ -211,6 +211,7 @@ def get_csv_path(organization_slug=None, project_slug=None, attribute=None):
         )
     return data_path
 
+
 def get_path_database(database=None):
     """Path databased based on database.
 
