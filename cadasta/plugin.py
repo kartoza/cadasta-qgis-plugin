@@ -92,7 +92,8 @@ class CadastaPlugin:
         """
         layer = QgsMapLayerRegistry.instance().mapLayer(layer_id)
         layer_names = layer.name().split('/')
-        if len(layer_names) > 1 and ('relationships' in layer.name() or 'parties' in layer.name()):
+        if len(layer_names) > 1 and \
+                ('relationships' in layer.name() or 'parties' in layer.name()):
             try:
                 project_slug, attribute = layer_names[1].split('_')
                 organization_slug = layer_names[0]
@@ -114,7 +115,8 @@ class CadastaPlugin:
 
         # Load csv file
         layer_names = layer.name().split('/')
-        if len(layer_names) > 1 and ('relationships' in layer.name() or 'parties' in layer.name()):
+        if len(layer_names) > 1 and \
+                ('relationships' in layer.name() or 'parties' in layer.name()):
             try:
                 project_slug, attribute = layer_names[1].split('_')
                 organization_slug = layer_names[0]

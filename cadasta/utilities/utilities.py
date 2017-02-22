@@ -34,7 +34,10 @@ class Utilities(object):
     """Class contains helpful methods for cadasta process."""
 
     @staticmethod
-    def save_project_basic_information(information, relationship_layer_id=None, party_layer_id=None):
+    def save_project_basic_information(
+            information,
+            relationship_layer_id=None,
+            party_layer_id=None):
         """Save project basic information.
 
         :param information: basic information that will be saved
