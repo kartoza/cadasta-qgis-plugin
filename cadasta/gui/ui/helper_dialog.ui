@@ -54,8 +54,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>634</width>
-          <height>408</height>
+          <width>640</width>
+          <height>420</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -106,7 +106,7 @@
         <widget class="QPushButton" name="close_button">
          <property name="font">
           <font>
-           <pointsize>16</pointsize>
+           <pointsize>14</pointsize>
           </font>
          </property>
          <property name="cursor">

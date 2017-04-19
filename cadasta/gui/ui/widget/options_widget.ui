@@ -33,8 +33,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>773</width>
-        <height>537</height>
+        <width>779</width>
+        <height>543</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -258,7 +258,7 @@
           <widget class="QPushButton" name="clear_button">
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
+             <pointsize>14</pointsize>
             </font>
            </property>
            <property name="cursor">
@@ -293,14 +293,14 @@
           <widget class="QPushButton" name="test_connection_button">
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
+             <pointsize>14</pointsize>
             </font>
            </property>
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">width: 140px; height: 30px; </string>
+            <string notr="true">width: 200px; height: 30px; </string>
            </property>
            <property name="text">
             <string>Test connection....</string>
@@ -331,7 +331,7 @@
           <widget class="QPushButton" name="save_button">
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
+             <pointsize>14</pointsize>
             </font>
            </property>
            <property name="cursor">

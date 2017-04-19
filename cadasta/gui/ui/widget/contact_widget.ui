@@ -33,8 +33,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>773</width>
-        <height>384</height>
+        <width>779</width>
+        <height>390</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -89,7 +89,7 @@
           <widget class="QPushButton" name="add_button">
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
+             <pointsize>14</pointsize>
             </font>
            </property>
            <property name="cursor">
@@ -107,7 +107,7 @@
           <widget class="QPushButton" name="delete_button">
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
+             <pointsize>14</pointsize>
             </font>
            </property>
            <property name="cursor">
@@ -127,7 +127,7 @@
         <widget class="QPushButton" name="save_button">
          <property name="font">
           <font>
-           <pointsize>16</pointsize>
+           <pointsize>14</pointsize>
           </font>
          </property>
          <property name="cursor">
