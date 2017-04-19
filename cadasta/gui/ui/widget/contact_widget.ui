@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>797</width>
-    <height>387</height>
+    <height>408</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -33,8 +33,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>779</width>
-        <height>369</height>
+        <width>773</width>
+        <height>384</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -87,8 +87,16 @@
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QPushButton" name="add_button">
+           <property name="font">
+            <font>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
            <property name="cursor">
-            <cursorShape>OpenHandCursor</cursorShape>
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">height: 25px; </string>
            </property>
            <property name="text">
             <string>Add</string>
@@ -97,8 +105,16 @@
          </item>
          <item>
           <widget class="QPushButton" name="delete_button">
+           <property name="font">
+            <font>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
            <property name="cursor">
-            <cursorShape>OpenHandCursor</cursorShape>
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">height: 25px; </string>
            </property>
            <property name="text">
             <string>Delete</string>
@@ -109,6 +125,17 @@
        </item>
        <item>
         <widget class="QPushButton" name="save_button">
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">height: 25px; </string>
+         </property>
          <property name="text">
           <string>Save</string>
          </property>
