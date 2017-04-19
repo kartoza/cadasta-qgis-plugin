@@ -143,21 +143,22 @@
         <item row="0" column="1">
          <widget class="QLabel" name="label_main_title">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="font">
            <font>
-            <pointsize>18</pointsize>
+            <pointsize>12</pointsize>
             <weight>50</weight>
             <italic>false</italic>
             <bold>false</bold>
+            <underline>false</underline>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">font: 18pt; color: #fff;</string>
+           <string notr="true">color: #fff;</string>
           </property>
           <property name="text">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;Cadasta&lt;/span&gt;&lt;span style=&quot; font-size:22pt;&quot;&gt; step by step&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
