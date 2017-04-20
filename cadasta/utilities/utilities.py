@@ -25,6 +25,7 @@ from cadasta.common.setting import get_path_data, get_csv_path
 from cadasta.utilities.geojson_parser import GeojsonParser
 from cadasta.utilities.i18n import tr
 from cadasta.utilities.resources import get_project_path
+from cadasta.model.contact import Contact
 
 __copyright__ = "Copyright 2016, Cadasta"
 __license__ = "GPL version 3"
@@ -91,6 +92,33 @@ class Utilities(object):
         """
         organization_slug = information['organization']['slug']
         project_slug = information['slug']
+
+        # Save new contacts to db
+        if 'contacts' in information:
+            project_contacts = information['contacts']
+            contacts_from_db = Contact.get_rows()
+
+            for contact in project_contacts:
+
+                contact_exist = False
+
+                for contact_from_db in contacts_from_db:
+                    if contact['name'] == contact_from_db.name:
+                        contact_exist = True
+                    if contact['tel'] and contact['tel'] != contact_from_db.phone:
+                        contact_exist = False
+                    if contact['email'] and contact['email'] != contact_from_db.email:
+                        contact_exist = False
+                    if contact_exist:
+                        break
+
+                if not contact_exist:
+                    new_contact = Contact()
+                    new_contact.name = contact['name']
+                    new_contact.email = contact['email']
+                    new_contact.phone = contact['tel']
+                    new_contact.save()
+
         filename = get_path_data(
             organization_slug=organization_slug,
             project_slug=project_slug)
