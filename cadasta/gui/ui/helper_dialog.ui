@@ -55,7 +55,7 @@
           <x>0</x>
           <y>0</y>
           <width>640</width>
-          <height>420</height>
+          <height>430</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -106,14 +106,14 @@
         <widget class="QPushButton" name="close_button">
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="styleSheet">
-          <string notr="true">height: 30px; width: 60px;</string>
+          <string notr="true">height: 20px; width: 60px;</string>
          </property>
          <property name="text">
           <string>Close</string>

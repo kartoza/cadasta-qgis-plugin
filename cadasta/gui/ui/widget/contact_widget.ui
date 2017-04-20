@@ -89,14 +89,14 @@
           <widget class="QPushButton" name="add_button">
            <property name="font">
             <font>
-             <pointsize>14</pointsize>
+             <pointsize>12</pointsize>
             </font>
            </property>
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">height: 25px; </string>
+            <string notr="true">height: 20px; </string>
            </property>
            <property name="text">
             <string>Add</string>
@@ -107,14 +107,14 @@
           <widget class="QPushButton" name="delete_button">
            <property name="font">
             <font>
-             <pointsize>14</pointsize>
+             <pointsize>12</pointsize>
             </font>
            </property>
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">height: 25px; </string>
+            <string notr="true">height: 20px; </string>
            </property>
            <property name="text">
             <string>Delete</string>
@@ -127,14 +127,14 @@
         <widget class="QPushButton" name="save_button">
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="styleSheet">
-          <string notr="true">height: 25px; </string>
+          <string notr="true">height: 20px; </string>
          </property>
          <property name="text">
           <string>Save</string>

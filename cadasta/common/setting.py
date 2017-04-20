@@ -9,10 +9,17 @@ Cadasta project - **Setting utilities**
 
 """
 import os
+import logging
 from PyQt4.QtCore import QUrl
 from PyQt4.QtCore import QSettings
 from cadasta.utilities.resources import resources_path
-from cadasta.utilities.resources import get_project_path
+from cadasta.utilities.resources import (
+    resources_path,
+    resource_url,
+    get_project_path
+)
+
+LOGGER = logging.getLogger('CadastaQGISPlugin')
 
 __author__ = 'Irwan Fathurrahman <irwan@kartoza.com>'
 __revision__ = '$Format:%H$'
