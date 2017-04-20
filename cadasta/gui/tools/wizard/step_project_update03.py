@@ -111,12 +111,14 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
         post_data = {
             'name': step2.project_name_text.displayText(),
             'description': step2.project_desc_text.toPlainText(),
-            'urls': [
-                step2.project_url_text.displayText()
-            ],
             'access': access,
             'contacts': contacts
         }
+
+        if step2.project_url_text.displayText():
+            post_data['urls'] = [
+                step2.project_url_text.displayText()
+            ]
 
         status, response = step2.send_update_request(post_data)
         if status:
