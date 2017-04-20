@@ -105,10 +105,12 @@ class Utilities(object):
                 for contact_from_db in contacts_from_db:
                     if contact['name'] == contact_from_db.name:
                         contact_exist = True
-                    if contact['tel'] and contact['tel'] != contact_from_db.phone:
-                        contact_exist = False
-                    if contact['email'] and contact['email'] != contact_from_db.email:
-                        contact_exist = False
+                    if 'tel' in contact:
+                        if contact['tel'] and contact['tel'] != contact_from_db.phone:
+                            contact_exist = False
+                    if 'email' in contact:
+                        if contact['email'] and contact['email'] != contact_from_db.email:
+                            contact_exist = False
                     if contact_exist:
                         break
 
