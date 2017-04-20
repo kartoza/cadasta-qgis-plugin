@@ -320,7 +320,8 @@ class Utilities(object):
                     else:
                         splitter = '/'
                     abs_path = os.path.abspath(
-                            os.path.join(dirpath, f)).split('.')[1].split(splitter)
+                            os.path.join(dirpath, f)).split('.')[1].split(
+                            splitter)
                     names = []
                     names.append(abs_path[-3])
                     names.append(abs_path[-2])

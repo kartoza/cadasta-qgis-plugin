@@ -252,7 +252,7 @@ def logo_element():
             'cadasta-logo-transparent.png')
 
     if os.name == 'nt':
-        path = 'file:///'+path
+        path = 'file:///' + path
 
     url = QUrl(path)
     path = url.toLocalFile()
