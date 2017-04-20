@@ -23,6 +23,7 @@ from qgis.core import (
     QGis)
 from cadasta.common.setting import get_path_data, get_csv_path
 from cadasta.utilities.geojson_parser import GeojsonParser
+from cadasta.utilities.i18n import tr
 from cadasta.utilities.resources import get_project_path
 
 __copyright__ = "Copyright 2016, Cadasta"
@@ -149,8 +150,8 @@ class Utilities(object):
         organization_slug = information['organization']['slug']
         project_slug = information['slug']
         old_information = Utilities.get_basic_information(
-                organization_slug,
-                project_slug)
+            organization_slug,
+            project_slug)
 
         information['relationship_layer_id'] = \
             old_information['relationship_layer_id']
@@ -425,3 +426,25 @@ class Utilities(object):
         :return: boolean
         """
         return os.name == 'nt'
+
+    @staticmethod
+    def extract_error_detail(result):
+        """Extract detail of error of connection
+
+        :param result: result of connection
+        :type result: str
+
+        :return: detail result
+        :rtype:str
+        """
+        error_detail = tr('Error : ')
+        detail = ''
+        try:
+            json_result = json.loads(result)
+            detail = json_result['result']['detail']
+            code = json_result['code']
+            error_detail = tr('Error %s : ' % str(code))
+        except (TypeError, ValueError, KeyError):
+            detail = result
+        error_detail += detail
+        return '<span style="color:red">%s</span><br>' % error_detail
