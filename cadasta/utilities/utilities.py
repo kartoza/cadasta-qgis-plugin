@@ -96,25 +96,16 @@ class Utilities(object):
         # Save new contacts to db
         if 'contacts' in information:
             project_contacts = information['contacts']
-            contacts_from_db = Contact.get_rows()
 
             for contact in project_contacts:
 
-                contact_exist = False
+                contact_from_db = Contact.get_rows(
+                    name=contact['name'],
+                    phone=contact['tel'],
+                    email=contact['email']
+                )
 
-                for contact_from_db in contacts_from_db:
-                    if contact['name'] == contact_from_db.name:
-                        contact_exist = True
-                    if 'tel' in contact:
-                        if contact['tel'] and contact['tel'] != contact_from_db.phone:
-                            contact_exist = False
-                    if 'email' in contact:
-                        if contact['email'] and contact['email'] != contact_from_db.email:
-                            contact_exist = False
-                    if contact_exist:
-                        break
-
-                if not contact_exist:
+                if not contact_from_db:
                     new_contact = Contact()
                     new_contact.name = contact['name']
                     new_contact.email = contact['email']

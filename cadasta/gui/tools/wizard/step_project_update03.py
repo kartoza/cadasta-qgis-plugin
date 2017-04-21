@@ -445,7 +445,7 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
 
         :param attributes: Project-specific attributes that are defined
                            through the project's questionnaire
-        :type attributes: str
+        :type attributes: dict
         """
         post_data = {
             'tenure_type': relationship_type,

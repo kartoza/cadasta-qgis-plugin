@@ -115,16 +115,17 @@ class Contact(object):
         query_filter = []
         filter_string = '%(FIELD)s=%(VALUE)s'
         for key, value in kwargs.iteritems():
-            if key != 'id':
+            if key != 'id' and value:
                 value = '"%s"' % value
 
             # append it to query filter
-            query_filter.append(filter_string % {
-                'FIELD': key,
-                'VALUE': value
-            })
+            if value:
+                query_filter.append(filter_string % {
+                    'FIELD': key,
+                    'VALUE': value
+                })
         query = CadastaDatabase.get_from_database(
-            Contact.__name__, ','.join(query_filter))
+            Contact.__name__, ' and '.join(query_filter))
 
         #  convert
         output = []
