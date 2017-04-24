@@ -45,7 +45,7 @@ class StepProjectDownload01(WizardStep, FORM_CLASS):
             which provides the hook by which you can manipulate the QGIS
             application at run time.
         :type iface: QgsInterface
-        
+
         :param parent: parent - widget to use as parent.
         :type parent: QWidget
         """
@@ -129,8 +129,9 @@ class StepProjectDownload01(WizardStep, FORM_CLASS):
 
             for project in projects:
                 project_slug = '{organization_slug}-{project_slug}'.format(
-                        organization_slug=project['organization']['slug'].encode('utf-8'),
-                        project_slug=project['slug'].encode('utf-8'))
+                    organization_slug=project['organization']['slug'].encode(
+                            'utf-8'),
+                    project_slug=project['slug'].encode('utf-8'))
                 if project_slug not in processed_downloaded_projects:
                     self.project_combo_box.addItem(
                         project['name'], project)
