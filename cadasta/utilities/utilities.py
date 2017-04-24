@@ -326,7 +326,7 @@ class Utilities(object):
     @staticmethod
     def get_all_downloaded_projects():
         """Get all downloaded projects
-        
+
         :return: downloaded projects
         :rtype: list of dict
         """

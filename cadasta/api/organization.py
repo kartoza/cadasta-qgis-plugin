@@ -63,7 +63,8 @@ class Organization(object):
             filter_permissions = '?permissions=project.create,project.list'
         else:
             filter_permissions = '?permissions=' + permissions
-        network = NetworkMixin(get_url_instance() + self.api_url + filter_permissions)
+        network = NetworkMixin(
+                get_url_instance() + self.api_url + filter_permissions)
         return self._call_api(network)
 
     def summary_organization(self, slug):

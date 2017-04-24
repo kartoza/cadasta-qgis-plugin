@@ -110,7 +110,9 @@ class StepProjectDownload01(WizardStep, FORM_CLASS):
                 )
 
             for project in projects:
-                project_slug = project['organization']['slug'] + '-' + project['slug']
+                project_slug = '{organization_slug}-{project_slug}'.format(
+                        organization_slug=project['organization']['slug'],
+                        project_slug=project['slug'])
                 if project_slug not in processed_downloaded_projects:
                     self.project_combo_box.addItem(
                         project['name'], project)
