@@ -164,7 +164,7 @@ class StepProjectDownload01(WizardStep, FORM_CLASS):
 
     def public_check_box_changed(self, state):
         """Public project check box's state changed.
-        
+
         :param state: Checkbox state
         :type state: int
         """
