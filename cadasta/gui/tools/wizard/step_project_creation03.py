@@ -286,6 +286,10 @@ class StepProjectCreation3(WizardStep, FORM_CLASS):
             if update_questionnaire_attribute:
                 if location['properties']:
                     post_data['attributes'] = location['properties']
+                for key, value in post_data['attributes'].iteritems():
+                    # Set None to empty string
+                    if not value:
+                        post_data['attributes'][key] = u''
                 if 'id' in post_data['attributes']:
                     del post_data['attributes']['id']
 
