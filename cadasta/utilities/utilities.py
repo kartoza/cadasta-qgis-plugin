@@ -507,10 +507,10 @@ class Utilities(object):
 
     @staticmethod
     def json_dumps(obj):
-        """Serialize obj as json formatted string, 
+        """Serialize obj as json formatted string,
         then replace null to empty string
 
-        :param obj: obj dictionary to be serialized 
+        :param obj: obj dictionary to be serialized
         :return: dict
         """
         json_string = json.dumps(obj)
