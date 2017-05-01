@@ -49,7 +49,7 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
     authenticated = pyqtSignal()
     unauthenticated = pyqtSignal()
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, auth_token=None):
         """Constructor
 
         :param parent: parent - widget to use as parent.
@@ -58,7 +58,7 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
         super(OptionsWidget, self).__init__(parent)
         self.text_test_connection_button = None
         self.url = None
-        self.auth_token = None
+        self.auth_token = auth_token
         self.login_api = None
         self.organisation_api = Organization()
         self.set_widgets()
@@ -86,7 +86,10 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
         self.url_input.setText(get_url_instance())
 
         # If login information exists
-        if get_authtoken():
+        if not self.auth_token:
+            self.auth_token = get_authtoken()
+
+        if self.auth_token:
             self.clear_button.setEnabled(True)
             self.test_connection_button.setEnabled(False)
             self.username_input.setText(get_setting('username'))

@@ -19,9 +19,6 @@ from qgis.testing.mocked import get_iface
 from qgis.utils import iface
 
 from cadasta.api.login import Login
-from cadasta.common.setting import (
-    get_authtoken,
-)
 
 from cadasta.gui.tools.cadasta_dialog import CadastaDialog
 from cadasta.gui.tools.widget.options_widget import OptionsWidget
@@ -40,7 +37,7 @@ class CadastaLoginTest(unittest.TestCase):
         dialog = CadastaDialog(
             iface=IFACE,
             subtitle='Cadasta Login',
-            widget=OptionsWidget()
+            widget=OptionsWidget(auth_token=None)
         )
         self.url = 'cadasta-url'
         self.dialog = dialog.widget
@@ -54,6 +51,7 @@ class CadastaLoginTest(unittest.TestCase):
     def test_warning_message(self):
         """Test warning message bar shows up if username/password is empty"""
         button = self.dialog.test_connection_button
+        self.assertTrue(self.dialog.test_connection_button.isEnabled())
         button.click()
         message_bar = self.dialog.message_bar
         self.assertIsInstance(message_bar, QgsMessageBar)
@@ -113,8 +111,6 @@ class CadastaLoginTest(unittest.TestCase):
         )
 
         self.assertTrue(self.dialog.save_button.isEnabled())
-
-        self.assertIsNotNone(get_authtoken())
 
 
 if __name__ == "__main__":
