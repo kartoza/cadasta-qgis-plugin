@@ -88,6 +88,7 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
         # If login information exists
         if get_authtoken():
             self.clear_button.setEnabled(True)
+            self.test_connection_button.setEnabled(False)
             self.username_input.setText(get_setting('username'))
             self.token_status.setText(
                 tr('Auth token is saved.')
@@ -104,6 +105,7 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
         delete_authtoken()
         delete_setting('username')
         self.clear_button.setEnabled(False)
+        self.test_connection_button.setEnabled(True)
         self.token_status.setText(
             tr(
                 'Auth token is empty.'
@@ -132,11 +134,30 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
             self.test_connection_button.setEnabled(False)
             self.test_connection_button.setText(self.tr('Logging in...'))
             # call tools API
-            self.login_api = Login(
+            self.login_api = self.call_login_api(
                 self.url,
                 username,
-                password,
-                self.on_finished)
+                password)
+            self.login_api.connect_post(self.login_api.post_data)
+
+    def call_login_api(self, url, username, password):
+        """Call login api.
+
+        :param url: platform url
+        :type url: str
+        
+        :param username: username for login
+        :type username: str
+        
+        :param password: password for login
+        :type password: str
+        """
+        return Login(
+            domain=url,
+            username=username,
+            password=password,
+            on_finished=self.on_finished
+        )
 
     def on_finished(self, result):
         """On finished function when tools request is finished."""
