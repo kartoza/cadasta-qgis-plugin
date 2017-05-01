@@ -148,10 +148,10 @@ class OptionsWidget(WidgetBase, FORM_CLASS):
 
         :param url: platform url
         :type url: str
-        
+
         :param username: username for login
         :type username: str
-        
+
         :param password: password for login
         :type password: str
         """
