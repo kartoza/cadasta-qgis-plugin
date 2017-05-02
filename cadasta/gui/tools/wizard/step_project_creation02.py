@@ -84,6 +84,9 @@ class StepProjectCreation2(WizardStep, FORM_CLASS, QuestionnaireUtility):
         self.label.setToolTip(
             tr('Location type field is required please select.'))
 
+        # Set tab focus
+        self.location_type_box.setFocus()
+
     def toogled_advanced_area(self, event):
         """Toogled advanced area
         """

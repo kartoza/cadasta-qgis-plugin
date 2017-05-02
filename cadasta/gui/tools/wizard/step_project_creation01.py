@@ -82,6 +82,8 @@ class StepProjectCreation1(WizardStep, FORM_CLASS):
         self.throbber_loader.setMovie(movie)
         movie.start()
         self.get_available_organisations()
+        self.organisation_box.setFocus()
+        self.project_description_text.setTabChangesFocus(True)
 
     def project_name(self):
         """Get project name from input.

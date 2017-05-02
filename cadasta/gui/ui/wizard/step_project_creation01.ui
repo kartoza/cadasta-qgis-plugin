@@ -273,7 +273,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QTextEdit" name="project_description_text"/>
+        <widget class="QTextEdit" name="project_description_text">
+         <property name="acceptRichText">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="label_9">
