@@ -37,6 +37,7 @@ from cadasta.utilities.utilities import Utilities
 from cadasta.api.api_connect import ApiConnect
 from cadasta.common.setting import get_url_instance
 from cadasta.vector import tools
+from cadasta.model.contact import Contact
 
 __copyright__ = "Copyright 2016, Cadasta"
 __license__ = "GPL version 3"
@@ -114,9 +115,9 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
             organization_slug = result[2]
             project_slug = result[3]
             vlayers = Utilities.save_layer(
-                    result[1],
-                    organization_slug,
-                    project_slug)
+                result[1],
+                organization_slug,
+                project_slug)
             self.progress_bar.setValue(50)
             relationship_layer = self.relationships_layer(vlayers)
             self.progress_bar.setValue(80)
@@ -132,6 +133,25 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
                 relationship_layer.id(),
                 party_layer_id
             )
+
+            project_contacts = []
+            if 'contacts' in self.project:
+                project_contacts = self.project['contacts']
+
+            for index, contact in enumerate(project_contacts):
+                contact_name = contact['name']
+                contact_email = contact['email']
+                contact_phone = contact['tel']
+                contact_in_db = Contact.get_rows(
+                    name=contact_name, email=contact_email
+                )
+                if len(contact_in_db) == 0:
+                    new_contact = Contact()
+                    new_contact.name = contact_name
+                    new_contact.email = contact_email
+                    new_contact.phone = contact_phone
+                    new_contact.save()
+
         else:
             pass
         self.progress_bar.setValue(self.progress_bar.maximum())
@@ -177,8 +197,8 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
 
         api = '/api/v1/organizations/{organization_slug}/projects/' \
               '{project_slug}/parties/'.format(
-                organization_slug=organization_slug,
-                project_slug=project_slug)
+            organization_slug=organization_slug,
+            project_slug=project_slug)
 
         connector = ApiConnect(get_url_instance() + api)
         status, results = connector.get(paginated=True)
@@ -372,7 +392,7 @@ class StepProjectDownload02(WizardStep, FORM_CLASS):
                             result['tenure_type'],
                             result['party']['id'],
                             questionnaire_attr,
-                            ])
+                        ])
                         relationship_layer.addFeature(fet, True)
                         relationship_layer.commitChanges()
                 except (IndexError, KeyError):
