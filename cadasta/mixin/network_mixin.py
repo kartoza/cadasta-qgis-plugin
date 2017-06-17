@@ -199,8 +199,17 @@ class NetworkMixin(object):
                 "results": [ ... ]
             }
         """
-        old_data = json.loads(old_data_str or '[]')
-        new_data = json.loads(new_data_str)
+        old_data = ''
+        new_data = ''
+
+        LOGGER.debug(old_data_str)
+        LOGGER.debug(new_data_str)
+
+        try:
+            old_data = json.loads(old_data_str or '[]')
+            new_data = json.loads(new_data_str)
+        except ValueError:
+            pass
         results_new_data = []
         if 'results' in new_data:
             results_new_data = new_data['results']

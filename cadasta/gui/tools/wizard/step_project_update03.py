@@ -12,7 +12,7 @@ This module provides: Project Update Step 5 : Upload update data
 """
 import logging
 import json
-from PyQt4.QtCore import Qt
+from PyQt4.QtCore import Qt, QDate
 from qgis.core import QgsVectorLayer, QgsMapLayerRegistry
 from cadasta.gui.tools.wizard.wizard_step import WizardStep
 from cadasta.gui.tools.wizard.wizard_step import get_wizard_step_ui_class
@@ -152,6 +152,11 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
         for layer in self.vlayers:
             features = layer.getFeatures()
 
+            # Remove unneeded fields
+            field_names = [field.name() for field in
+                           layer.pendingFields()]
+            field_names.remove('id')
+
             for feature in features:
                 attributes = feature.attributes()
                 api = update_loc_api.format(
@@ -160,12 +165,27 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
                     spatial_unit_id=attributes[location_id_idx]
                 )
 
+                # Check if there are questionnaire attributes
+                questionnaire_attributes = dict()
+                for field_name in field_names:
+                    index = layer.fieldNameIndex(field_name)
+                    if index == -1:
+                        continue
+                    questionnaire = attributes[index]
+                    if questionnaire and questionnaire != '-':
+                        if isinstance(questionnaire, QDate):
+                            questionnaire = unicode(questionnaire.toString(
+                                    'yyyy/MM/dd'
+                            ))
+                        questionnaire_attributes[field_name] = questionnaire
+
                 if attributes[location_id_idx]:
                     geojson = feature.geometry().exportToGeoJSON()
                     self.upload_update_locations(
                         api,
                         geojson,
-                        attributes[location_type_idx]
+                        attributes[location_type_idx],
+                        questionnaire_attributes
                     )
                 if not attributes[location_id_idx]:
                     # New location
@@ -341,7 +361,12 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
 
         self.set_progress_bar(100)
 
-    def upload_update_locations(self, api, geometry, location_type):
+    def upload_update_locations(
+            self,
+            api,
+            geometry,
+            location_type,
+            attributes=None):
         """Upload update location data.
 
         :param api: Api url to upload location
@@ -352,11 +377,18 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
 
         :param location_type: Location type
         :type location_type: str
+
+        :param attributes: Project-specific attributes that are defined
+                   through the project's questionnaire
+        :type attributes: dict
         """
         post_data = {
             'geometry': geometry,
             'type': location_type
         }
+
+        if attributes:
+            post_data['attributes'] = attributes
 
         connector = ApiConnect(get_url_instance() + api)
         status, result = connector.patch_json(Utilities.json_dumps(post_data))
@@ -370,7 +402,7 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
                 Utilities.extract_error_detail(result)
             )
 
-    def add_new_locations(self, geometry, location_type):
+    def add_new_locations(self, geometry, location_type, attributes=None):
         """Add new location
 
         :param geometry: Location geojson geometry
@@ -378,6 +410,10 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
 
         :param location_type: Location type
         :type location_type: str
+
+        :param attributes: Project-specific attributes that are defined
+           through the project's questionnaire
+        :type attributes: dict
         """
         api = '/api/v1/organizations/{organization_slug}/projects/' \
               '{project_slug}/spatial/'.format(
@@ -390,6 +426,9 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
 
         if location_type:
             post_data['type'] = location_type
+
+        if attributes:
+            post_data['attributes'] = attributes
 
         connector = ApiConnect(get_url_instance() + api)
         status, result = connector.post_json(Utilities.json_dumps(post_data))
