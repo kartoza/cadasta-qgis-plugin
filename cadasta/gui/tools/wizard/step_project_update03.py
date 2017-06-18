@@ -156,6 +156,7 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
             field_names = [field.name() for field in
                            layer.pendingFields()]
             field_names.remove('id')
+            field_names.remove('type')
 
             for feature in features:
                 attributes = feature.attributes()
@@ -192,7 +193,8 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
                     geojson = feature.geometry().exportToGeoJSON()
                     project_id = self.add_new_locations(
                         geojson,
-                        attributes[location_type_idx]
+                        attributes[location_type_idx],
+                        questionnaire_attributes
                     )
                     layer.startEditing()
                     layer.changeAttributeValue(
@@ -437,7 +439,7 @@ class StepProjectUpdate03(WizardStep, FORM_CLASS):
             self.set_status(
                 self.tr('Location added.')
             )
-            return json.loads(result)['properties']['id']
+            return result['properties']['id']
         else:
             self.set_status(
                 Utilities.extract_error_detail(result)

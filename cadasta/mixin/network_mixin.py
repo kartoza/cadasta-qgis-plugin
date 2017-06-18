@@ -169,7 +169,12 @@ class NetworkMixin(object):
         merged_data = QByteArray(merged_data)
 
         # Get next page
-        next_url = json.loads(resp_txt).get('next')
+        next_url = None
+        try:
+            next_url = json.loads(resp_txt).get('next')
+        except ValueError:
+            pass
+
         if next_url:
             next_req = NetworkMixin(next_url, geojson=self.geojson)
             return next_req.connect_get_paginated(
@@ -202,9 +207,6 @@ class NetworkMixin(object):
         old_data = ''
         new_data = ''
 
-        LOGGER.debug(old_data_str)
-        LOGGER.debug(new_data_str)
-
         try:
             old_data = json.loads(old_data_str or '[]')
             new_data = json.loads(new_data_str)
@@ -232,11 +234,20 @@ class NetworkMixin(object):
                 }
             }
         """
-        old_data = json.loads(old_data_str or 'null')
-        new_data = json.loads(new_data_str)
-        if not old_data:
+        old_data = dict()
+        new_data = dict()
+        try:
+            old_data = json.loads(old_data_str or '[]')
+            new_data = json.loads(new_data_str)
+        except ValueError:
+            pass
+
+        if not old_data and 'results' in new_data:
             return json.dumps(new_data['results'])
-        old_data['features'] += new_data['results']['features']
+
+        if 'features' in old_data and 'results' in new_data:
+            old_data['features'] += new_data['results']['features']
+
         return json.dumps(old_data)
 
     def connection_read_data(self):
